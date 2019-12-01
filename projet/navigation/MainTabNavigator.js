@@ -1,55 +1,76 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
+import IconFont from "react-native-vector-icons/FontAwesome";
+import IconAnt from "react-native-vector-icons/AntDesign";
 
-import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import ProfilScreen from '../screens/Profil/ProfilScreen';
+import ActualityScreen from '../screens/Actuality/ActualityScreen';
+import SettingsScreen from '../screens/Settings/SettingsScreen';
+import ChatScreen from '../screens/Chat/ChatScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 });
 
-const HomeStack = createStackNavigator(
+const ActualityStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Actuality: ActualityScreen,
   },
   config
 );
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+ActualityStack.navigationOptions = {
+  tabBarLabel: 'Fil d\'actualité',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
+    <IconFont
+        name="newspaper-o"
+        size={25}
     />
   ),
 };
 
-HomeStack.path = '';
+ActualityStack.path = '';
 
-const LinksStack = createStackNavigator(
+const ChatStack = createStackNavigator(
+    {
+        Chat: ChatScreen,
+    },
+    config
+);
+
+ChatStack.navigationOptions = {
+    tabBarLabel: 'Mes messages',
+    tabBarIcon: ({ focused }) => (
+        <IconAnt
+            name="message1"
+            size={25}
+        />
+    ),
+};
+
+ChatStack.path = '';
+
+const ProfilStack = createStackNavigator(
   {
-    Links: LinksScreen,
+    Profil: ProfilScreen,
   },
   config
 );
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+ProfilStack.navigationOptions = {
+  tabBarLabel: 'Mon profil',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+      <IconMat
+          name="face-profile"
+          size={25}
+      />
   ),
 };
 
-LinksStack.path = '';
+ProfilStack.path = '';
 
 const SettingsStack = createStackNavigator(
   {
@@ -59,17 +80,20 @@ const SettingsStack = createStackNavigator(
 );
 
 SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
+  tabBarLabel: 'Mes paramètres',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
-  ),
+      <IconAnt
+          name="setting"
+          size={25}
+      />  ),
 };
 
 SettingsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
+  ActualityStack,
+  ProfilStack,
+  ChatStack,
   SettingsStack,
 });
 
