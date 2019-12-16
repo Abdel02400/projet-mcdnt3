@@ -16,11 +16,11 @@ export default class ActualityScreen extends Component {
     }
 }
 
-ActualityScreen.navigationOptions = {
-    headerTitle: (
-        <HeaderScreen title={'Fil d\'actualité'} />
-    )
-};
+ ActualityScreen.navigationOptions = {
+     headerTitle: (
+         <HeaderScreen title={'Fil d\'actualité'} />
+     )
+ };
 
 const styles = StyleSheet.create({
     container: {

@@ -5,11 +5,9 @@ import {
 } from 'react-native';
 import SignInScreen from './SignIn/SignInScreen';
 import SignUpScreen from './SignUp/SignUpScreen';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
 
 
-class Login extends Component {
+export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -40,7 +38,7 @@ class Login extends Component {
     render() {
         let content;
         if(this.state.signUp) content = <SignUpScreen />;
-        else content = <SignInScreen />
+        else content = <SignInScreen navigation={this.props.navigation}/>
 
         return(
             <View style={styles.wrapper}>
@@ -68,7 +66,6 @@ class Login extends Component {
 const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
-        paddingTop: 15,
         backgroundColor: '#fff',
     },
     scrollViewWrapper: {
@@ -92,11 +89,3 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     }
 });
-
-const LoginNavigator = createStackNavigator({
-    Login: {
-        screen: Login,
-    },
-});
-
-export default createAppContainer(LoginNavigator);

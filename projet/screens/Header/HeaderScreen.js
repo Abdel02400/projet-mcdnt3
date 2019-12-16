@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
-import AuthService from "./../../utils/AuthService";
 
 
 export default class HeaderScreen extends Component {
     constructor(props) {
         super(props);
         this.onLogout = this.onLogout.bind(this);
+        alert(this.props.navigation)
     }
 
     onLogout()
     {
-        AuthService.logout();
-        this.props.navigation.navigate('Login');
+        //AuthService.logout();
+        //alert(this.props.navigation)
+        //this.props.navigation.navigate('Auth');
     }
 
     render() {

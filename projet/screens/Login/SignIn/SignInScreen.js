@@ -27,7 +27,7 @@ export default class SignInScreen extends Component {
             AuthService.login(this.state.email, this.state.password).then((data) => {
                 if(data.status === 200){
                     AuthService.setToken(data.headers['x-auth']);
-                    this.props.navigation.navigate('Actuality');
+                    this.props.navigation.navigate('Main');
                 }else {
                     this.setState({
                         ...this.state,
