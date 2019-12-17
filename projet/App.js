@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import AuthService from "./utils/AuthService";
 import AppNavigator from "./navigation/AppNavigator";
 
 export default class App extends Component {
