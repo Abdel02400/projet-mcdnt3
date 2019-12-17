@@ -17,7 +17,6 @@ export default class AuthLoadingScreen extends Component {
         return (
             <View>
                 <ActivityIndicator />
-                <StatusBar barStyle="default" />
             </View>
         );
     }

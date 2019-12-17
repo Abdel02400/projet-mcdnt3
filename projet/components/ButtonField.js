@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {View, TouchableHighlight, StyleSheet, SafeAreaView, Text} from "react-native";
+import {View, TouchableHighlight, StyleSheet, SafeAreaView, Text, Platform, Button} from "react-native";
 export default class ButtonField extends Component {
     constructor(props) {
         super(props);
@@ -17,19 +17,31 @@ export default class ButtonField extends Component {
         const fontSize = titleTextSize || 14;
         const buttonColorBackground = buttonColor || 'white';
         return (
-            <SafeAreaView>
-                <View style={styles.wrapper}>
-                    <TouchableHighlight
-                        style={[
-                            { backgroundColor: buttonColorBackground},
-                            styles.buttonField
-                        ]}
-                        onPress={onPress}
-                    >
-                        <Text style={{fontSize: fontSize, color: color, textAlign: 'center'}}>{titleText}</Text>
-                    </TouchableHighlight>
-                </View>
-            </SafeAreaView>
+            <View>
+                {Platform.OS === "ios" &&
+                <SafeAreaView>
+                    <View style={styles.wrapper}>
+                        <TouchableHighlight
+                            style={[
+                                { backgroundColor: buttonColorBackground},
+                                styles.buttonField
+                            ]}
+                            onPress={onPress}
+                        >
+                            <Text style={{fontSize: fontSize, color: color, textAlign: 'center'}}>{titleText}</Text>
+                        </TouchableHighlight>
+                    </View>
+                </SafeAreaView>
+                }
+                {Platform.OS === "android" &&
+                <Button
+                    title={titleText}
+                    color={color}
+                    style={{fontSize: fontSize, textAlign: 'center'}}
+                    onPress={() => Alert.alert('Simple Button pressed')}
+                />
+                }
+            </View>
         );
     }
 }
