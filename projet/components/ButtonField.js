@@ -36,9 +36,9 @@ export default class ButtonField extends Component {
                 {Platform.OS === "android" &&
                 <Button
                     title={titleText}
-                    color={color}
+                    color={buttonColorBackground}
                     style={{fontSize: fontSize, textAlign: 'center'}}
-                    onPress={() => Alert.alert('Simple Button pressed')}
+                    onPress={onPress}
                 />
                 }
             </View>
