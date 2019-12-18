@@ -5,7 +5,11 @@ import {
   View,
   SafeAreaView,
   ScrollView,
-  Text
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  Button,
+  TouchableWithoutFeedback
 } from 'react-native';
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
@@ -30,7 +34,7 @@ export default class ProfilScreen extends Component {
       headerRight: () => (
         <IconMat
           name="logout"
-          size={35}
+          size={10}
           onPress={navigation.getParam('logout')}
         />
       ),
@@ -40,6 +44,12 @@ export default class ProfilScreen extends Component {
 
   componentDidMount() {
     this.props.navigation.setParams({ logout: this._logout });
+
+  }
+
+  _updateProfileImage() {
+    // TODO : Upload d'une photo de profil
+    alert("Mettre a jour la photo de profil");
   }
 
 
@@ -59,15 +69,17 @@ export default class ProfilScreen extends Component {
 
           <View style={{ alignSelf: "center" }}>
             <View style={styles.profileImage}>
-              <Image source={require("../../assets/images/profile-pic.png")} style={styles.image} resizeMode="center"></Image>
+              <TouchableWithoutFeedback onLongPress={() => this._updateProfileImage()} style={styles.touchableOpacity}>
+                <Image source={require("../../assets/images/profile-pic.png")} style={styles.image} resizeMode="center"></Image>
+              </TouchableWithoutFeedback>
             </View>
-            <View style={styles.dm}>
+            {/*    <View style={styles.dm}>
               <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
             </View>
             <View style={styles.active}></View>
             <View style={styles.add}>
               <Ionicons name="ios-add" size={48} color="#DFD8C8" style={{ marginTop: 6, marginLeft: 2 }}></Ionicons>
-            </View>
+            </View> */}
           </View>
 
           <View style={styles.infoContainer}>
@@ -119,7 +131,8 @@ export default class ProfilScreen extends Component {
             </View> */}
           </View>
 
-          {/* Section About */}
+          {/* Section About 
+              TODO : Connecter a la base de données */}
           <Text style={[styles.subText, styles.recent]}>About</Text>
           <View style={{ alignItems: "center" }}>
             <View style={styles.recentItem}>
@@ -134,7 +147,7 @@ export default class ProfilScreen extends Component {
             </View>
 
 
-            {/* Shop du Tatoueur */} 
+            {/* Shop du Tatoueur */}
             {/* TODO : Connecter a la base de données */}
             <View style={styles.recentItem}>
               <View style={styles.containerAboutIcons}>
@@ -352,5 +365,9 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "blue",
     textDecorationLine: "underline"
+  },
+  touchableOpacity: {
+    backgroundColor: "transparent",
+    borderRadius: 0
   }
 });
