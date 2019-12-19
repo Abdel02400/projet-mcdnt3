@@ -50,7 +50,7 @@ export default class ActualityScreen extends Component {
     };
 
     _onMomentumScrollEnd = (e, state, context) => {
-        alert(state);
+    
     };
 
     render() {
