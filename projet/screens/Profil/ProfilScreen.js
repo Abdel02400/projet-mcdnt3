@@ -34,7 +34,7 @@ export default class ProfilScreen extends Component {
       headerRight: () => (
         <IconMat
           name="logout"
-          size={10}
+          size={35}
           onPress={navigation.getParam('logout')}
         />
       ),
@@ -50,6 +50,11 @@ export default class ProfilScreen extends Component {
   _updateProfileImage() {
     // TODO : Upload d'une photo de profil
     alert("Mettre a jour la photo de profil");
+  }
+
+  _goToPost(idImage) {
+    // TODO : Chemin vers le post concerné
+    alert("Go To image Post number " + idImage);
   }
 
 
@@ -103,27 +108,27 @@ export default class ProfilScreen extends Component {
           </View>
 
           {/* TODO : Itérer sur les photos en base de données utilisateur  
-              TODO : Rendre les images cliquables */}
+              TODO : Rendre les images cliquables - FAIT  */}
           <View style={{ marginTop: 32 }}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <View style={styles.mediaImageContainer}>
+              <TouchableHighlight activeOpacity={0}  focusedOpacity={0} onPress={() => this._goToPost(1)} style={styles.mediaImageContainer}>
                 <Image source={require("../../assets/images/media1.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => this._goToPost(2)} style={styles.mediaImageContainer}>
                 <Image source={require("../../assets/images/media2.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => this._goToPost(3)} style={styles.mediaImageContainer}>
                 <Image source={require("../../assets/images/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => this._goToPost(4)} style={styles.mediaImageContainer}>
                 <Image source={require("../../assets/images/media4.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => this._goToPost(5)} style={styles.mediaImageContainer}>
                 <Image source={require("../../assets/images/media5.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </View>
-              <View style={styles.mediaImageContainer}>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => this._goToPost(6)} style={styles.mediaImageContainer}>
                 <Image source={require("../../assets/images/media6.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </View>
+              </TouchableHighlight>
             </ScrollView>
             {/*    <View style={styles.mediaCount}>
                   <Text style={[styles.text, { fontSize: 24, color: "#DFD8C8", fontWeight: "300" }]}>70</Text>
@@ -132,7 +137,7 @@ export default class ProfilScreen extends Component {
           </View>
 
           {/* Section About 
-              TODO : Connecter a la base de données */}
+              TODO : Connecter a la base de données : Posts, Followers, guests*/}
           <Text style={[styles.subText, styles.recent]}>About</Text>
           <View style={{ alignItems: "center" }}>
             <View style={styles.recentItem}>
@@ -296,7 +301,8 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 12,
     overflow: "hidden",
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    backgroundColor: "transparent"
   },
   mediaCount: {
     backgroundColor: "#41444B",
@@ -369,5 +375,9 @@ const styles = StyleSheet.create({
   touchableOpacity: {
     backgroundColor: "transparent",
     borderRadius: 0
-  }
+  },
+  logo: {
+    width:50,
+    height:40
+  },
 });
