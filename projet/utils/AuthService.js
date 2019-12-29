@@ -1,6 +1,6 @@
 import axios from 'axios';
 const headers = {'Content-Type': 'application/json'};
-const burl = "http://172.20.10.2:8000";
+const burl = "http://192.168.1.16:8000";
 import {AsyncStorage} from 'react-native';
 
 export default {
