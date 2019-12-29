@@ -11,12 +11,16 @@ import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
 import AuthService from "../../utils/AuthService";
 import Swiper from 'react-native-swiper';
+import {connect} from "react-redux";
 
-export default class ActualityScreen extends Component {
+class ActualityScreen extends Component {
 
     constructor(props) {
         super(props);
         this._logout = this._logout.bind(this);
+        this.state = {
+            user: null,
+        }
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -39,6 +43,13 @@ export default class ActualityScreen extends Component {
         };
     };
 
+    componentWillMount() {
+        this.setState({
+            ...this.state,
+            user: this.props.user
+        })
+    }
+
     componentDidMount() {
         this.props.navigation.setParams({ logout: this._logout });
     }
@@ -59,7 +70,7 @@ export default class ActualityScreen extends Component {
                 <View style={styles.slide1}>
                     <View style={styles.artistNameContainer}>
                         <Text style={styles.artistName}>
-                            Nom du Tatoueur
+                            Bonjour {this.state.user.firstname} {this.state.user.lastname}
                         </Text>
                     </View>
                     <View style={styles.imageContainer}>
@@ -172,3 +183,11 @@ const styles = StyleSheet.create({
         fontSize: 13,
     }
 });
+
+const mapStateToProps = state => {
+    return {
+        user: state.auth.user,
+    }
+}
+
+export default connect(mapStateToProps, {  })(ActualityScreen)
