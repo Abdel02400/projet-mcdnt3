@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import {
     Image,
-    StyleSheet,
+    StyleSheet, Text,
     View,
 } from 'react-native';
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
 import AuthService from "../../utils/AuthService";
+import {connect} from "react-redux";
 
-export default class ActualityScreen extends Component {
+class ActualityScreen extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            user: null
+        };
         this._logout = this._logout.bind(this);
     }
 
@@ -35,6 +39,15 @@ export default class ActualityScreen extends Component {
         };
     };
 
+    componentWillMount() {
+        alert(this.props.user.firstname);
+
+        this.setState({
+            ...this.state,
+            user: this.props.user
+        })
+    }
+
     componentDidMount() {
         this.props.navigation.setParams({ logout: this._logout });
     }
@@ -48,7 +61,7 @@ export default class ActualityScreen extends Component {
     render() {
         return(
             <View>
-
+                <Text>Bonjour {this.state.user.firstname} {this.state.user.lastname} </Text>
             </View>
         );
     }
@@ -64,3 +77,11 @@ const styles = StyleSheet.create({
         height:40
     },
 });
+
+const mapStateToProps = state => {
+    return {
+        user: state.auth.user,
+    }
+}
+
+export default connect(mapStateToProps, { })(ActualityScreen)

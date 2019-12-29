@@ -1,9 +1,22 @@
 import axios from 'axios';
 const headers = {'Content-Type': 'application/json'};
-const burl = "http://172.20.10.11:8000";
+const burl = "http://172.20.10.2:8000";
 import {AsyncStorage} from 'react-native';
 
 export default {
+    InitializeUser : async function(lastname ,firstname) {
+        let token = await this.getToken();
+        const res = await axios.post(burl + '/initlializeUser',{
+            "user":{
+                'lastname' : lastname,
+                'firstname' : firstname,
+                'token': token
+            }
+        },{
+            headers: headers
+        })
+        return res.status === 200 ? res : false;
+    },
     signup : function(email,password, role) {
 
         return axios.post(burl + '/signup',{
@@ -16,7 +29,7 @@ export default {
             headers: headers
         })
     },
-    login : function(email,password) {
+    signin : function(email,password) {
         return axios.post(burl + '/login',{
             "user":{
                 'email' : email,
@@ -30,14 +43,14 @@ export default {
         const res = await axios.get(burl + '/user/' + token ,{
             headers: headers
         })
-        if(res.status === 200) return true;
+        if(res.status === 200) return res.data;
         else return false;
 
     },
     loggedIn: async function(){
-        let token = await this.getToken()
+        let token = await this.getToken();
         let profil;
-        if(token === '') profil = false
+        if(token === '') profil = false;
         else profil = await this.getProfile(token);
         return profil;
     },

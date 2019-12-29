@@ -1,0 +1,11 @@
+export const SIGNIN_ATTEMPT = 'signin_attempt';
+export const SIGNIN_SUCCESS = 'signin_success';
+export const SIGNIN_FAILED = 'signin_failed';
+export const SIGNUP_ATTEMPT = 'signup_attempt';
+export const SIGNUP_SUCCESS = 'signup_success';
+export const SIGNUP_FAILED = 'signup_failed';
+export const ISLOGGED_SUCCESS = 'islogged_success';
+export const ISLOGGED_FAILED = 'islogged_failed';
+export const INITIALIZEUSER_ATTEMPT = 'initializeuser_attempt';
+export const INITIALIZEUSER_SUCCESS = 'initializeuser_success';
+export const INITIALIZEUSER_FAILED = 'initializeuser_failed';

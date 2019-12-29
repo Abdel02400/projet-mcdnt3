@@ -23,21 +23,40 @@ module.exports = (app) => {
                 res.status(201).send("mail used");
             } else {
                 user.save().then(newUser => {
-                    res.status(201).send("Inscription réussi");
+                    generateToken(newUser.id)
+                        .then(token => {
+                            res.status(200).header('x-auth', token).send("Inscription réussi");
+                        });
                 })
             }
         });
     })
 
+    app.post('/initlializeUser', (req, res) => {
+       var {firstname, lastname, token} = req.body.user;
+       User.findOneAndUpdate({ token: token }, {firstname: firstname,lastname: lastname, InitializeUser: false},{new: true})
+            .then(user => {
+                generateToken(user.id)
+                    .then(token => {
+                        res.status(200).header('x-auth', token).send(user);
+                    })
+                    .catch(error => {
+                        res.status(401).send("l'ajout du token a échoué");
+                    });
+            }).catch(error => {
+            res.status(404).send("l'ajout des information a échoué");
+        })
+    })
+
     app.post('/login', (req, res) => {
         var {email, password} = req.body.user;
-        User.find({"email":email}, {"__v":0}).then(user => {
-            if (user.length > 0) {
-                bcrypt.compare(password, user[0].password, (err, comparaison) => {
+        User.findOne({"email":email}, {"__v":0}).then(user => {
+            if (user) {
+                bcrypt.compare(password, user.password, (err, comparaison) => {
                     if (comparaison) {
-                        generateToken(user[0].id)
+                        generateToken(user.id)
                             .then(token => {
-                                res.status(200).header('x-auth', token).send({"isConnected":true});
+                                res.status(200).header('x-auth', token).send(user);
                             });
 
                     } else {

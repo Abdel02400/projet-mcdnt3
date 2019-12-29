@@ -37,7 +37,7 @@ export default class Login extends Component {
 
     render() {
         let content;
-        if(this.state.signUp) content = <SignUpScreen />;
+        if(this.state.signUp) content = <SignUpScreen navigation={this.props.navigation}/>;
         else content = <SignInScreen navigation={this.props.navigation}/>
 
         return(

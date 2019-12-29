@@ -5,6 +5,9 @@ const UserSchema = new Schema({
     email: String,
     password: String,
     role: String,
+    firstname: { type: String, default: null },
+    lastname:{ type: String, default: null },
+    InitializeUser: { type: Boolean, default: true },
     token: { type: String, default: null },
 });
 

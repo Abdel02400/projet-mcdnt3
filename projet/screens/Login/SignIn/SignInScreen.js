@@ -2,46 +2,42 @@ import React, { Component } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import InputField from "../../../components/InputField";
 import ButtonField from "../../../components/ButtonField";
-import AuthService from "../../../utils/AuthService";
+import { connect } from 'react-redux';
+import { SignInUser } from "../../../actions";
+import {Spinner} from "../../../components/Spinner";
 
-export default class SignInScreen extends Component {
+class SignInScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             email: '',
             password: '',
             formNotComplete: false,
-            resServer: '',
+            error: ''
         };
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps.isLogged && nextProps.user){
+            this.props.navigation.navigate('Main');
+        } else if(nextProps.error) {
+            this.setState({
+                ...this.state,
+                error: nextProps.error
+            })
+        }
     }
 
     onPressBtn = e => {
         e.preventDefault();
-        if(this.state.email === '' || this.state.password === '')
-        {
+        const { email, password } = this.state;
+        if(email === '' || password === ''){ //a faire (validator de formulaire)
             this.setState({
                 ...this.state,
                 formNotComplete : true
             });
         }else {
-            AuthService.login(this.state.email, this.state.password).then((data) => {
-                if(data.status === 200){
-                    AuthService.setToken(data.headers['x-auth']);
-                    this.props.navigation.navigate('Main');
-                }else {
-                    this.setState({
-                        ...this.state,
-                        resServer: data.data
-                    })
-                }
-            },(error) => {
-                alert(error)
-
-                this.setState({
-                    ...this.state,
-                    resServer: "Echec server ! "
-                })
-            })
+            this.props.SignInUser({ email, password });
         }
     }
 
@@ -49,10 +45,24 @@ export default class SignInScreen extends Component {
         this.setState({
             ...this.state,
             formNotComplete: false,
-            resServer: '',
+            error: '',
             [stateName] : value
         });
+   }
+
+    _renderButton() {
+        if(this.props.loading) return <Spinner />
+        return (
+            <ButtonField
+                titleText="Se connecter"
+                titleTextSize={25}
+                textColor={'white'}
+                buttonColor={'black'}
+                onPress={ e => this.onPressBtn(e) }
+            />
+        )
     }
+
     render() {
         return (
             <View style={styles.form}>
@@ -76,17 +86,11 @@ export default class SignInScreen extends Component {
                     customStyle={{marginBottom:30}}
                     onChangeText={ (password) => this.onChangeTextInput('password', password) }
                 />
-                <ButtonField
-                    titleText="Se connecter"
-                    titleTextSize={25}
-                    textColor={'white'}
-                    buttonColor={'black'}
-                    onPress={ e => this.onPressBtn(e) }
-                />
+                { this._renderButton() }
                 {this.state.formNotComplete ?
                     <Text style={styles.formNotComplete}>Merci de remplir tout les champs</Text> : null
                 }
-                <Text>{this.state.resServer}</Text>
+                <Text>{this.state.error}</Text>
             </View>
         );
     }
@@ -103,3 +107,14 @@ const styles = StyleSheet.create({
         marginTop: 2,
     }
 });
+
+const mapStateToProps = state => {
+    return {
+        error: state.auth.error,
+        loading: state.auth.loading,
+        user: state.auth.user,
+        isLogged: state.auth.isLogged,
+    }
+}
+
+export default connect(mapStateToProps, { SignInUser })(SignInScreen)

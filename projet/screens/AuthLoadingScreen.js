@@ -1,16 +1,26 @@
-import React, { Component } from 'react';import {
+import React, { Component } from 'react';
+import {
     ActivityIndicator,
-    StatusBar,
     View,
 } from 'react-native';
-import AuthService from "../utils/AuthService";
+import {connect} from "react-redux";
+import { IsLoggedUser } from "../actions";
 
-export default class AuthLoadingScreen extends Component {
+class AuthLoadingScreen extends Component {
+    constructor(props) {
+        super(props);
+    }
 
-    async componentWillMount() {
-        let isLogged = await AuthService.loggedIn();
-        if(isLogged) this.props.navigation.navigate('Main');
-        else this.props.navigation.navigate('Auth');
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if(nextProps.isLogged && nextProps.user){
+            if(!nextProps.initializeUser) this.props.navigation.navigate('Main');
+            else this.props.navigation.navigate('InitializeUser');
+        } else this.props.navigation.navigate('Auth');
+    }
+
+    componentWillMount() {
+        this.props.IsLoggedUser();
     }
 
     render() {
@@ -21,3 +31,15 @@ export default class AuthLoadingScreen extends Component {
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        error: state.auth.error,
+        loading: state.auth.loading,
+        user: state.auth.user,
+        isLogged: state.auth.isLogged,
+        initializeUser: state.auth.initializeUser
+    }
+}
+
+export default connect(mapStateToProps, { IsLoggedUser })(AuthLoadingScreen)

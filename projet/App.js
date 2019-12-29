@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
 import {
-  Platform, StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
 import AppNavigator from "./navigation/AppNavigator";
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import ReduxThunk from 'redux-thunk';
+import reducers from './reducers';
 
 export default class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentWillMount() {
-
-  }
-
-
   render() {
     return(
-        <View style={styles.container}>
-          <AppNavigator />
-        </View>
+        <Provider store={createStore(reducers, {}, applyMiddleware(ReduxThunk))}>
+          <View style={styles.container}>
+            <AppNavigator />
+          </View>
+        </Provider>
     );
   }
 }
@@ -28,8 +24,6 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
-    backgroundColor: '#fff',
   },
 });
 
