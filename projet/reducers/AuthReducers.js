@@ -61,7 +61,11 @@ export default (state = INITIAL_STATE, action) => {
                 isLogged: true,
                 error: '',
                 initializeUser: false,
-                user: action.user,
+                user: {
+                    ...state.user,
+                    firstname: action.user.firstname,
+                    lastname: action.user.lastname
+                }
             };
         case SIGNUP_SUCCESS:
             return {

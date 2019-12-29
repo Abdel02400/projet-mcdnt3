@@ -37,9 +37,6 @@ class ActualityScreen extends Component {
         this.renderUsers = this.renderUsers.bind(this);
         // SWIPE CARDS
         this.position = new Animated.ValueXY()
-        this.state = {
-            currentIndex: 0
-        }
 
         this.rotate = this.position.x.interpolate({
             inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
@@ -135,11 +132,11 @@ class ActualityScreen extends Component {
     };
 
     componentWillMount() {
+        this.props.navigation.setParams({ logout: this._logout });
         this.setState({
             ...this.state,
             user: this.props.user
         });
-        this.props.navigation.setParams({ logout: this._logout });
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -171,26 +168,29 @@ class ActualityScreen extends Component {
                 if (i < this.state.currentIndex) {
                     return null
                 }
-                else if (i == this.state.currentIndex) {
+                else if (i === this.state.currentIndex) {
     
                     return (
                         <Animated.View
                             {...this.panResponder.panHandlers}
                             key={item.id} style={[this.rotateAndTranslate, { height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, position: 'absolute' }]}>
+                            <View>
+                                <Text>Bonjour {this.state.user.firstname} {this.state.user.lastname} </Text>
+                            </View>
                             <Animated.View style={{ opacity: this.likeOpacity, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
                                 <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>LIKE</Text>
-    
+
                             </Animated.View>
-    
+
                             <Animated.View style={{ opacity: this.dislikeOpacity, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
                                 <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NOPE</Text>
-    
+
                             </Animated.View>
-    
+
                             <Image
                                 style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
                                 source={item.uri} />
-    
+
                         </Animated.View>
                     )
                 }

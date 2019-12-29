@@ -18,7 +18,7 @@ class InitializeUserScreen extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if(nextProps.isLogged && nextProps.user){
+        if(nextProps.isLogged && nextProps.user.firstname){
             this.props.navigation.navigate('Main');
         } else if(nextProps.error) {
             this.setState({
