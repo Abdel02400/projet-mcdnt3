@@ -11,21 +11,23 @@ export default class ButtonField extends Component {
             titleTextSize,
             textColor,
             buttonColor,
-            onPress
+            onPress,
+            heightButton,
+            borderColor
         } = this.props;
         const color = textColor || 'white';
         const fontSize = titleTextSize || 14;
         const buttonColorBackground = buttonColor || 'white';
+        const heightButtonValue = heightButton || 30;
+        const borderColorValue = borderColor || 'black'
         return (
-            <View>
+            <View style={styles.container}>
                 {Platform.OS === "ios" &&
                 <SafeAreaView>
-                    <View style={styles.wrapper}>
+                    <View>
                         <TouchableHighlight
-                            style={[
-                                { backgroundColor: buttonColorBackground},
-                                styles.buttonField
-                            ]}
+                            style={{ backgroundColor: buttonColorBackground, height: heightButtonValue, justifyContent: 'center',
+                                alignItems: 'center', borderColor: borderColorValue, borderWidth: 1 }}
                             onPress={onPress}
                         >
                             <Text style={{fontSize: fontSize, color: color, textAlign: 'center'}}>{titleText}</Text>
@@ -37,7 +39,8 @@ export default class ButtonField extends Component {
                 <Button
                     title={titleText}
                     color={buttonColorBackground}
-                    style={{fontSize: fontSize, textAlign: 'center'}}
+                    style={{fontSize: fontSize, textAlign: 'center', height: heightButtonValue, justifyContent: 'center',
+                        alignItems: 'center', borderColor: borderColorValue, borderWidth: 1  }}
                     onPress={onPress}
                 />
                 }
@@ -46,10 +49,7 @@ export default class ButtonField extends Component {
     }
 }
 const styles = StyleSheet.create({
-    wrapper: {
-        display: "flex"
+    container: {
+        width: 350
     },
-    buttonField : {
-        height: 50
-    }
 });

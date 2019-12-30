@@ -139,26 +139,6 @@ class ActualityScreen extends Component {
         });
     }
 
-    static navigationOptions = ({ navigation }) => {
-        return {
-            headerLeft: () => (
-                <Image
-                    source={require('../../assets/images/logo.png')}
-                    style={styles.logo}
-                />
-            ),
-            headerTitle: () => <HeaderScreen title={'Fil d\'actualitÃ©'} />,
-            headerRight: () => (
-                <IconMat
-                    name="logout"
-                    size={35}
-                    onPress={navigation.getParam('logout')}
-                />
-            ),
-            headerStyle: { height: 40 }
-        };
-    };
-
         // Fonctiond de rendu des cards
         renderUsers = () => {
 

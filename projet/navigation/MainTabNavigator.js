@@ -96,7 +96,10 @@ const tabNavigator = createBottomTabNavigator({
   ProfilStack,
   ChatStack,
   SettingsStack,
-});
+},
+    {
+        initialRouteName: "ProfilStack"
+    });
 
 tabNavigator.path = '';
 

@@ -9,6 +9,21 @@ const UserSchema = new Schema({
     lastname:{ type: String, default: null },
     InitializeUser: { type: Boolean, default: true },
     token: { type: String, default: null },
+    followers: {
+        type: [Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+    },
+    following: {
+        type: [Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+    },
+    posts: {
+        type: [Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+    }
 });
 
 const User = mongoose.model('user', UserSchema);

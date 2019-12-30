@@ -7,18 +7,31 @@ import {
   ScrollView,
   Text,
   TouchableHighlight,
-  TouchableOpacity,
-  Button,
-  TouchableWithoutFeedback
+  Dimensions,
+  TouchableWithoutFeedback, FlatList
 } from 'react-native';
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
 import AuthService from "../../utils/AuthService";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import {connect} from "react-redux";
+import {countElement} from "../../utils/GlobalSettings";
+import {Spinner} from "../../components/Spinner";
+import ButtonField from "../../components/ButtonField";
 
-export default class ProfilScreen extends Component {
+class ProfilScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      user: null,
+      images: [
+        {url: require('../../assets/images/media1.jpg'), id: 1},
+        {url: require('../../assets/images/media2.jpg'), id: 2},
+        {url: require('../../assets/images/media3.jpg'), id: 3},
+        {url: require('../../assets/images/media4.jpg'), id: 4},
+        {url: require('../../assets/images/media5.jpg'), id: 5},
+      ]
+    };
     this._logout = this._logout.bind(this);
   }
 
@@ -42,9 +55,13 @@ export default class ProfilScreen extends Component {
     };
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.navigation.setParams({ logout: this._logout });
-
+      this.props.navigation.setParams({ logout: this._logout });
+      this.setState({
+        ...this.state,
+        user: this.props.user
+      });
   }
 
   _updateProfileImage() {
@@ -57,6 +74,19 @@ export default class ProfilScreen extends Component {
     alert("Go To image Post number " + idImage);
   }
 
+  _renderButton() {
+    if(this.props.loading) return <Spinner />
+    return (
+        <ButtonField
+            titleText="modifier mon profil"
+            titleTextSize={15}
+            textColor={'black'}
+            buttonColor={'white'}
+            onPress={ e => this.onPressBtn(e) }
+        />
+    )
+  }
+
 
   _logout = () => {
     AuthService.logout();
@@ -67,50 +97,56 @@ export default class ProfilScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.titleBar}>
-            <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
-            <Ionicons name="md-more" size={24} color="#52575D"></Ionicons>
-          </View>
-
-          <View style={{ alignSelf: "center" }}>
+          <View style={{ alignSelf: "center", marginTop: 5 }}>
             <View style={styles.profileImage}>
               <TouchableWithoutFeedback onLongPress={() => this._updateProfileImage()} style={styles.touchableOpacity}>
                 <Image source={require("../../assets/images/profile-pic.png")} style={styles.image} resizeMode="center"></Image>
               </TouchableWithoutFeedback>
             </View>
-            {/*    <View style={styles.dm}>
-              <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-            </View>
-            <View style={styles.active}></View>
-            <View style={styles.add}>
-              <Ionicons name="ios-add" size={48} color="#DFD8C8" style={{ marginTop: 6, marginLeft: 2 }}></Ionicons>
-            </View> */}
           </View>
 
           <View style={styles.infoContainer}>
-            <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>Blondy</Text>
-            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>Tatoo Artist</Text>
+            <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{this.state.user.firstname} {this.state.user.lastname}</Text>
+            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{this.state.user.role}</Text>
           </View>
 
           <View style={styles.statsContainer}>
             <View style={styles.statsBox}>
-              <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
+              <Text style={[styles.text, { fontSize: 24 }]}>{countElement(this.state.user.posts)}</Text>
               <Text style={[styles.text, styles.subText]}>Posts</Text>
             </View>
             <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
-              <Text style={[styles.text, { fontSize: 24 }]}>45,844</Text>
+              <Text style={[styles.text, { fontSize: 24 }]}> {countElement(this.state.user.followers)} </Text>
               <Text style={[styles.text, styles.subText]}>Followers</Text>
             </View>
             <View style={styles.statsBox}>
-              <Text style={[styles.text, { fontSize: 24 }]}>302</Text>
+              <Text style={[styles.text, { fontSize: 24 }]}>{countElement(this.state.user.following)}</Text>
               <Text style={[styles.text, styles.subText]}>Following</Text>
             </View>
           </View>
 
-          {/* TODO : Itérer sur les photos en base de données utilisateur  
-              TODO : Rendre les images cliquables - FAIT  */}
+          <View style={styles.updateButton}>
+            {this._renderButton()}
+          </View>
+
+          <SafeAreaView style={styles.imageList}>
+            <View style={styles.container}>
+              <FlatList style={styles.flatListStyle} keyExtractor={(item, index) => index.toString()} data={this.state.images} numColumns={3} renderItem={({item, index})=>{ return (
+                  <View>
+                    <TouchableHighlight focusedOpacity={0} onPress={() => this._goToPost(item.id)}>
+                      <Image style={styles.imageListItem} source={item.url} />
+                    </TouchableHighlight>
+                  </View>
+              )}
+              } />
+            </View>
+          </SafeAreaView>
+
+
+          {/* TODO : Itérer sur les photos en base de données utilisateur
+              TODO : Rendre les images cliquables - FAIT
           <View style={{ marginTop: 32 }}>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal={false} showsHorizontalScrollIndicator={true}>
               <TouchableHighlight activeOpacity={0}  focusedOpacity={0} onPress={() => this._goToPost(1)} style={styles.mediaImageContainer}>
                 <Image source={require("../../assets/images/media1.jpg")} style={styles.image} resizeMode="cover"></Image>
               </TouchableHighlight>
@@ -130,90 +166,11 @@ export default class ProfilScreen extends Component {
                 <Image source={require("../../assets/images/media6.jpg")} style={styles.image} resizeMode="cover"></Image>
               </TouchableHighlight>
             </ScrollView>
-            {/*    <View style={styles.mediaCount}>
+                <View style={styles.mediaCount}>
                   <Text style={[styles.text, { fontSize: 24, color: "#DFD8C8", fontWeight: "300" }]}>70</Text>
                   <Text style={[styles.text, { fontSize: 12, color: "#DFD8C8", textTransform: "uppercase" }]}>Media</Text>
-            </View> */}
-          </View>
-
-          {/* Section About 
-              TODO : Connecter a la base de données : Posts, Followers, guests*/}
-          <Text style={[styles.subText, styles.recent]}>About</Text>
-          <View style={{ alignItems: "center" }}>
-            <View style={styles.recentItem}>
-              <View style={styles.containerAboutIcons}>
-                <Ionicons name="ios-home" size={48} color="#DFD8C8" style={styles.aboutIcons}></Ionicons>
-              </View>
-              <View style={[styles.aboutText, { width: 250 }]}>
-                <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                  Works in <Text style={styles.aboutCity}>Brussels</Text> - <Text style={styles.aboutCountry}>Belgium</Text>
-                </Text>
-              </View>
             </View>
-
-
-            {/* Shop du Tatoueur */}
-            {/* TODO : Connecter a la base de données */}
-            <View style={styles.recentItem}>
-              <View style={styles.containerAboutIcons}>
-                <Ionicons name="ios-briefcase" size={48} color="#DFD8C8" style={styles.aboutIcons}></Ionicons>
-              </View>
-              <View style={[styles.aboutText, { width: 250 }]}>
-                <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                  Works at <Text style={styles.aboutShop}>La Cave</Text>
-                </Text>
-              </View>
-            </View>
-          </View>
-
-
-          <Text style={[styles.subText, styles.recent]}>Recent Activity</Text>
-          <View style={{ alignItems: "center" }}>
-            <View style={styles.recentItem}>
-              <View style={styles.activityIndicator}></View>
-              <View style={{ width: 250 }}>
-                <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                  Started following <Text style={{ fontWeight: "400" }}>Jake Challeahe</Text> and <Text style={{ fontWeight: "400" }}>Luis Poteer</Text>
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.recentItem}>
-              <View style={styles.activityIndicator}></View>
-              <View style={{ width: 250 }}>
-                <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                  Started following <Text style={{ fontWeight: "400" }}>Luke Harper</Text>
-                </Text>
-              </View>
-            </View>
-          </View>
-
-
-          {/*TODO : Rendre les éléments cliquables */}
-          <Text style={[styles.subText, styles.recent]}>Store</Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <View style={styles.mediaImageContainer}>
-              <Image source={require("../../assets/images/flash1.jpg")} style={styles.image} resizeMode="cover"></Image>
-              <Text>
-                <Text style={styles.price}>100</Text>
-                <Text style={styles.unit}>$</Text>
-              </Text>
-            </View>
-            <View style={styles.mediaImageContainer}>
-              <Image source={require("../../assets/images/flash2.jpg")} style={styles.image} resizeMode="cover"></Image>
-              <Text>
-                <Text style={styles.price}>200</Text>
-                <Text style={styles.unit}>$</Text>
-              </Text>
-            </View>
-            <View style={styles.mediaImageContainer}>
-              <Image source={require("../../assets/images/flash3.jpg")} style={styles.image} resizeMode="cover"></Image>
-              <Text>
-                <Text style={styles.price}>300</Text>
-                <Text style={styles.unit}>$</Text>
-              </Text>
-            </View>
-          </ScrollView>
+          </View>*/}
         </ScrollView>
       </SafeAreaView>
     );
@@ -223,10 +180,28 @@ export default class ProfilScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF"
+    backgroundColor: "#FFF",
+  },
+  imageList: {
+    flex: 1,
+    backgroundColor: '#F3F3F3',
+    marginTop: 10,
+  },
+  imageListItem: {
+    width: (Dimensions.get('window').width / 3) - 10,
+    height: 150,
+    margin: 5,
+  },
+  flatListStyle: {
+    flex: 1,
   },
   text: {
     color: "#52575D"
+  },
+  updateButton : {
+    marginTop: 15,
+    flexDirection: "row",
+    alignSelf: "center",
   },
   image: {
     flex: 1,
@@ -246,8 +221,8 @@ const styles = StyleSheet.create({
     fontWeight: "500"
   },
   profileImage: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: 100,
     overflow: "hidden"
   },
@@ -381,3 +356,12 @@ const styles = StyleSheet.create({
     height:40
   },
 });
+
+const mapStateToProps = state => {
+  return {
+    user: state.auth.user,
+  }
+}
+
+export default connect(mapStateToProps, {  })(ProfilScreen)
+
