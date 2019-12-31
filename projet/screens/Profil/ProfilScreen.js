@@ -66,32 +66,37 @@ class ProfilScreen extends Component {
     });
   }
 
-  askPermissionsAsyncCamera = async () => {
-    const { status: cameraPermission } = await Permissions.askAsync(Permissions.CAMERA);
-  };
-
-
-  askPermissionsAsyncCameraRoll = async () => {
-    const { status: cameraRollPermission } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  askPermissionsAsync = async () => {
+    const {status: cameraPermission} = await Permissions.askAsync(Permissions.CAMERA);
+    const {status: cameraRollPermission} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    // you would probably do something to verify that permissions
+    // are actually granted, but I'm skipping that for brevity
+    alert("Permissions demandées");
   };
 
   async updateProfileImageFromGallery() {
-    if (Platform.OS == "ios") {
-      await this.askPermissionsAsyncCameraRoll();
-    }
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      allowsMultipleSelection: false
-    });
-    if (result.cancelled) {
-      return;
-    }
+  /*  if(Platform.OS == "ios") {
+      let resultPerm = await this.askPermissionsAsync({});
+      alert("Permissions demandées");
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        allowsMultipleSelection: false
+      });
+      if (result.cancelled) {
+        return;
+      }
+    } */
+
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        allowsMultipleSelection: false
+      });
+      if (result.cancelled) {
+        return;
+      }
   }
 
   async updateProfilePictureFromCamera() {
-    if (Platform.OS == "ios") {
-      await this.askPermissionsAsyncCamera();
-    }
     // Montre la camera et attend que l'utilisateur prenne une pic
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -112,6 +117,17 @@ class ProfilScreen extends Component {
 
     // On prépare les données avec FormData
     let formData = new FormData();
+
+    // Exemple de requete serveur
+    /* formData.append('photo', { uri: localUri, name: filename, type });
+  
+    return await fetch(YOUR_SERVER_URL, {
+      method: 'POST',
+      body: formData,
+      header: {
+        'content-type': 'multipart/form-data',
+      },
+    }); */
   }
 
   setProfilePictureModalVisible() {
@@ -181,6 +197,10 @@ class ProfilScreen extends Component {
               <TouchableOpacity style={styles.modalProfilePictureContainer} onPress={() => this.updateProfileImageFromGallery()}>
                 <Ionicons name="md-image" style={styles.modalProfilePictureIcons}></Ionicons>
                 <Text>Gallerie</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalProfilePictureContainer} onPress={() => this.askPermissionsAsync()}>
+                <Ionicons name="md-image" style={styles.modalProfilePictureIcons}></Ionicons>
+                <Text>Permissions</Text>
               </TouchableOpacity>
             </View>
           </Modal>
