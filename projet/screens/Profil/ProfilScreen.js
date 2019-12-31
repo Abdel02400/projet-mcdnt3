@@ -8,16 +8,17 @@ import {
   Text,
   TouchableHighlight,
   Dimensions,
-  TouchableWithoutFeedback, FlatList
+  TouchableWithoutFeedback, FlatList, Modal, TouchableOpacity
 } from 'react-native';
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
 import AuthService from "../../utils/AuthService";
 import { Ionicons } from "@expo/vector-icons";
-import {connect} from "react-redux";
-import {countElement} from "../../utils/GlobalSettings";
-import {Spinner} from "../../components/Spinner";
+import { connect } from "react-redux";
+import { countElement } from "../../utils/GlobalSettings";
+import { Spinner } from "../../components/Spinner";
 import ButtonField from "../../components/ButtonField";
+import * as ImagePicker from 'expo-image-picker';
 
 class ProfilScreen extends Component {
   constructor(props) {
@@ -25,11 +26,11 @@ class ProfilScreen extends Component {
     this.state = {
       user: null,
       images: [
-        {url: require('../../assets/images/media1.jpg'), id: 1},
-        {url: require('../../assets/images/media2.jpg'), id: 2},
-        {url: require('../../assets/images/media3.jpg'), id: 3},
-        {url: require('../../assets/images/media4.jpg'), id: 4},
-        {url: require('../../assets/images/media5.jpg'), id: 5},
+        { url: require('../../assets/images/media1.jpg'), id: 1 },
+        { url: require('../../assets/images/media2.jpg'), id: 2 },
+        { url: require('../../assets/images/media3.jpg'), id: 3 },
+        { url: require('../../assets/images/media4.jpg'), id: 4 },
+        { url: require('../../assets/images/media5.jpg'), id: 5 },
       ]
     };
     this._logout = this._logout.bind(this);
@@ -57,16 +58,60 @@ class ProfilScreen extends Component {
 
   componentWillMount() {
     this.props.navigation.setParams({ logout: this._logout });
-      this.props.navigation.setParams({ logout: this._logout });
-      this.setState({
-        ...this.state,
-        user: this.props.user
-      });
+    this.setState({
+      ...this.state,
+      user: this.props.user,
+      profilePictureModalVisible: false
+    });
   }
 
-  _updateProfileImage() {
-    // TODO : Upload d'une photo de profil
-    alert("Mettre a jour la photo de profil");
+  async updateProfileImageFromGallery() {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      allowsMultipleSelection: false
+    });
+    if (result.cancelled) {
+      return;
+    }
+  }
+
+  async updateProfilePictureFromCamera() {
+    // Montre la camera et attend que l'utilisateur prenne une pic
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    if (result.cancelled) {
+      return;
+    }
+
+    // Sauvegarde img en local
+    let localUri = result.uri;
+    let filename = localUri.split('/').pop();
+
+    // Gestion du type de l'image
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+
+    // On prépare les données avec FormData
+    let formData = new FormData();
+
+    // Exemple de requete serveur
+    /* formData.append('photo', { uri: localUri, name: filename, type });
+  
+    return await fetch(YOUR_SERVER_URL, {
+      method: 'POST',
+      body: formData,
+      header: {
+        'content-type': 'multipart/form-data',
+      },
+    }); */
+  }
+
+  setProfilePictureModalVisible() {
+    this.setState({ profilePictureModalVisible: true });
+    console.log("SET CHANGED");
   }
 
   _goToPost(idImage) {
@@ -75,18 +120,17 @@ class ProfilScreen extends Component {
   }
 
   _renderButton() {
-    if(this.props.loading) return <Spinner />
+    if (this.props.loading) return <Spinner />
     return (
-        <ButtonField
-            titleText="modifier mon profil"
-            titleTextSize={15}
-            textColor={'black'}
-            buttonColor={'white'}
-            onPress={ e => this.onPressBtn(e) }
-        />
+      <ButtonField
+        titleText="modifier mon profil"
+        titleTextSize={15}
+        textColor={'black'}
+        buttonColor={'white'}
+        onPress={e => this.onPressBtn(e)}
+      />
     )
   }
-
 
   _logout = () => {
     AuthService.logout();
@@ -96,14 +140,45 @@ class ProfilScreen extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
+
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ alignSelf: "center", marginTop: 5 }}>
             <View style={styles.profileImage}>
-              <TouchableWithoutFeedback onLongPress={() => this._updateProfileImage()} style={styles.touchableOpacity}>
+              <TouchableWithoutFeedback onLongPress={() => this.setProfilePictureModalVisible()} style={styles.touchableOpacity}>
                 <Image source={require("../../assets/images/profile-pic.png")} style={styles.image} resizeMode="center"></Image>
               </TouchableWithoutFeedback>
             </View>
           </View>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.profilePictureModalVisible}
+            presentationStyle="formSheet"
+            onRequestClose={() => {
+              this.setState({
+                ...this.state,
+                profilePictureModalVisible: false
+              });
+            }}>
+            <View>
+              <Text style={styles.profilePictureModalTitle}>Modifier l'image de profil</Text>
+            </View>
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <TouchableOpacity style={styles.modalProfilePictureContainer} onPress={() => this.updateProfilePictureFromCamera()}>
+                <Ionicons name="md-camera" style={styles.modalProfilePictureIcons}></Ionicons>
+                <Text>Camera</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalProfilePictureContainer} onPress={() => this.updateProfileImageFromGallery()}>
+                <Ionicons name="md-image" style={styles.modalProfilePictureIcons}></Ionicons>
+                <Text>Gallerie</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
 
           <View style={styles.infoContainer}>
             <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{this.state.user.firstname} {this.state.user.lastname}</Text>
@@ -131,13 +206,15 @@ class ProfilScreen extends Component {
 
           <SafeAreaView style={styles.imageList}>
             <View style={styles.container}>
-              <FlatList style={styles.flatListStyle} keyExtractor={(item, index) => index.toString()} data={this.state.images} numColumns={3} renderItem={({item, index})=>{ return (
+              <FlatList style={styles.flatListStyle} keyExtractor={(item, index) => index.toString()} data={this.state.images} numColumns={3} renderItem={({ item, index }) => {
+                return (
                   <View>
                     <TouchableHighlight focusedOpacity={0} onPress={() => this._goToPost(item.id)}>
                       <Image style={styles.imageListItem} source={item.url} />
                     </TouchableHighlight>
                   </View>
-              )}
+                )
+              }
               } />
             </View>
           </SafeAreaView>
@@ -198,7 +275,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#52575D"
   },
-  updateButton : {
+  updateButton: {
     marginTop: 15,
     flexDirection: "row",
     alignSelf: "center",
@@ -352,9 +429,21 @@ const styles = StyleSheet.create({
     borderRadius: 0
   },
   logo: {
-    width:50,
-    height:40
+    width: 50,
+    height: 40
   },
+  modalProfilePictureIcons: {
+    fontSize: 60
+  },
+  modalProfilePictureContainer: {
+    width: 100,
+    marginTop: "10%",
+    marginBottom: "10%"
+  },
+  profilePictureModalTitle: {
+    textAlign: "center",
+    fontSize: 30
+  }
 });
 
 const mapStateToProps = state => {
@@ -363,5 +452,5 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {  })(ProfilScreen)
+export default connect(mapStateToProps, {})(ProfilScreen)
 
