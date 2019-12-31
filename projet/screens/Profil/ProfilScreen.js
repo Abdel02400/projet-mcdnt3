@@ -8,7 +8,7 @@ import {
   Text,
   TouchableHighlight,
   Dimensions,
-  TouchableWithoutFeedback, FlatList, Modal, TouchableOpacity
+  TouchableWithoutFeedback, FlatList, Modal, TouchableOpacity, Platform
 } from 'react-native';
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
@@ -19,6 +19,7 @@ import { countElement } from "../../utils/GlobalSettings";
 import { Spinner } from "../../components/Spinner";
 import ButtonField from "../../components/ButtonField";
 import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 
 class ProfilScreen extends Component {
   constructor(props) {
@@ -65,7 +66,19 @@ class ProfilScreen extends Component {
     });
   }
 
+  askPermissionsAsyncCamera = async () => {
+    const { status: cameraPermission } = await Permissions.askAsync(Permissions.CAMERA);
+  };
+
+
+  askPermissionsAsyncCameraRoll = async () => {
+    const { status: cameraRollPermission } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  };
+
   async updateProfileImageFromGallery() {
+    if (Platform.OS == "ios") {
+      await this.askPermissionsAsyncCameraRoll();
+    }
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       allowsMultipleSelection: false
@@ -76,6 +89,9 @@ class ProfilScreen extends Component {
   }
 
   async updateProfilePictureFromCamera() {
+    if (Platform.OS == "ios") {
+      await this.askPermissionsAsyncCamera();
+    }
     // Montre la camera et attend que l'utilisateur prenne une pic
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -96,17 +112,6 @@ class ProfilScreen extends Component {
 
     // On prépare les données avec FormData
     let formData = new FormData();
-
-    // Exemple de requete serveur
-    /* formData.append('photo', { uri: localUri, name: filename, type });
-  
-    return await fetch(YOUR_SERVER_URL, {
-      method: 'POST',
-      body: formData,
-      header: {
-        'content-type': 'multipart/form-data',
-      },
-    }); */
   }
 
   setProfilePictureModalVisible() {

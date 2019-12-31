@@ -2,13 +2,10 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import InputField from "../../../components/InputField";
 import ButtonField from "../../../components/ButtonField";
-import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import { SignInUser } from "../../../actions";
 import { Spinner } from "../../../components/Spinner";
 import * as ImagePicker from 'expo-image-picker';
-
-import FBSDK, {LoginManager} from "react-native-fbsdk";
 
 class SignInScreen extends Component {
     constructor(props) {
