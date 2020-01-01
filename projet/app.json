@@ -24,7 +24,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "host.exp.Exponent"
+    },
+    "facebookScheme": "fb2512803462323237",
+    "facebookAppId": "2512803462323237",
+    "facebookDisplayName":"L-Ink-React",
+    "android": {
+      "package": "l.ink"
     }
   }
 }
