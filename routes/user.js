@@ -47,7 +47,7 @@ module.exports = (app) => {
         });
     })
 
-    app.post('/initlializeUser',upload.single('fileData'), (req, res) => {
+    app.post('/initlializeUser', upload.single('fileData'), (req, res) => {
        var {firstname, lastname, description, avatarUri, token} = req.body;
 
         let extArray = req.file.mimetype.split("/");

@@ -8,7 +8,7 @@ import AuthService from "../utils/AuthService";
 export const IsLoggedUser = () => {
     return async (dispatch) => {
 
-        let user = await AuthService.loggedIn();
+        let user = await AuthService.loggedIn()
         handleResponse(dispatch, user);
     };
 };
