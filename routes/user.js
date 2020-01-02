@@ -2,8 +2,23 @@ const User = require('./../models/user');
 const cryptPassword = require('../middleware/cryptPassword');
 const generateToken = require('../utils/generateToken');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const fs = require('fs');
 
 module.exports = (app) => {
+
+    const Storage = multer.diskStorage({
+        destination(req, file, callback) {
+            callback(null, `./images`)
+        },
+        filename(req, file, callback) {
+            let extArray = file.mimetype.split("/");
+            let extension = extArray[extArray.length - 1];
+            callback(null, `${file.originalname}-avatar.${extension}`)
+        },
+    })
+
+    const upload = multer({ storage: Storage })
 
     app.get('/user/:token', (req, res) => {
 
@@ -25,24 +40,34 @@ module.exports = (app) => {
                 user.save().then(newUser => {
                     generateToken(newUser.id)
                         .then(token => {
-                            res.status(200).header('x-auth', token).send("Inscription réussi");
+                            res.status(200).header('x-auth', token).send(newUser.id);
                         });
                 })
             }
         });
     })
 
-    app.post('/initlializeUser', (req, res) => {
-       var {firstname, lastname, token} = req.body.user;
-       User.findOneAndUpdate({ token: token }, {firstname: firstname,lastname: lastname, InitializeUser: false},{new: true})
+    app.post('/initlializeUser',upload.single('fileData'), (req, res) => {
+       var {firstname, lastname, description, avatarUri, token} = req.body;
+
+        let extArray = req.file.mimetype.split("/");
+        let extension = extArray[extArray.length - 1];
+
+       User.findOneAndUpdate({ token: token }, {firstname: firstname,lastname: lastname,description: description, avatar: 'avatar.' + extension, InitializeUser: false},{new: true})
             .then(user => {
-                generateToken(user.id)
-                    .then(token => {
-                        res.status(200).header('x-auth', token).send(user);
-                    })
-                    .catch(error => {
-                        res.status(401).send("l'ajout du token a échoué");
-                    });
+                fs.readFile(req.file.path,(err, contents)=> {
+                    if (err) {
+                        res.status(404).send("l'ajout des information a échoué");
+                    } else {
+                        generateToken(user.id)
+                            .then(token => {
+                                res.status(200).header('x-auth', token).send(user);
+                            })
+                            .catch(error => {
+                                res.status(401).send("l'ajout du token a échoué");
+                            });
+                    }
+                })
             }).catch(error => {
             res.status(404).send("l'ajout des information a échoué");
         })

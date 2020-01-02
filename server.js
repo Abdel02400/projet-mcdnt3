@@ -6,12 +6,15 @@ const userRoutes = require('./routes/user');
 var app = express();
 const PORT = 8000;
 
+app.use(express.static(__dirname + '/images'));
+
 // on defini le Body Parser
 var urlencodedParser = bodyParser.urlencoded({
     extended: true
 });
 app.use(urlencodedParser);
 app.use(bodyParser.json());
+
 
 // on fait la Définition des CORS
 app.use(function (req, res, next) {

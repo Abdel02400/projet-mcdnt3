@@ -6,10 +6,10 @@ import {
 
 import AuthService from "../utils/AuthService";
 
-export const InitializeUser = ({lastname, firstname}) => {
+export const InitializeUser = ({lastname, firstname, description, avatar, id}) => {
     return async (dispatch) => {
         dispatch({type: INITIALIZEUSER_ATTEMPT});
-        let data = await AuthService.InitializeUser(lastname, firstname)
+        let data = await AuthService.InitializeUser(lastname, firstname, description, avatar, id);
         handleResponse(dispatch, data);
     };
 };

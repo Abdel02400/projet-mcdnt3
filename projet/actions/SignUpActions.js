@@ -24,12 +24,12 @@ const handleResponse = (dispatch, data) => {
     if(data.status === 200){
         let token = data.headers['x-auth'];
         AuthService.setToken(token);
-        onSignUpSuccess(dispatch);
+        onSignUpSuccess(dispatch, data.data);
     }else onSignUpFailed(dispatch, data.data);
 };
 
-const onSignUpSuccess = (dispatch, user, token) => {
-    dispatch({type: SIGNUP_SUCCESS, user, token})
+const onSignUpSuccess = (dispatch, userId) => {
+    dispatch({type: SIGNUP_SUCCESS, userId})
 };
 
 const onSignUpFailed = (dispatch, error) => {

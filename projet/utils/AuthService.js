@@ -4,17 +4,27 @@ const burl = "http://172.20.10.2:8000";
 import {AsyncStorage} from 'react-native';
 
 export default {
-    InitializeUser : async function(lastname ,firstname) {
+    InitializeUser : async function(lastname ,firstname, description, avatar, id) {
         let token = await this.getToken();
-        const res = await axios.post(burl + '/initlializeUser',{
-            "user":{
-                'lastname' : lastname,
-                'firstname' : firstname,
-                'token': token
-            }
-        },{
-            headers: headers
-        })
+
+        const data = new FormData();
+        data.append('lastname', lastname);
+        data.append('firstname', firstname);
+        data.append('description', description);
+        data.append('avatarUri', avatar.uri);
+        data.append('token', token);
+        data.append('fileData', {
+            uri : avatar.uri,
+            type: avatar.type,
+            name: id,
+        });
+
+        const res = await axios.post(burl + '/initlializeUser',data,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Accept': 'application/json',
+            },
+        });
         return res.status === 200 ? res : false;
     },
     signup : function(email,password, role) {

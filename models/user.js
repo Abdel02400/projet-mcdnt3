@@ -23,7 +23,9 @@ const UserSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: 'User',
         default: []
-    }
+    },
+    description: { type: String, default: null },
+    avatar : { type: String, default: null }
 });
 
 const User = mongoose.model('user', UserSchema);

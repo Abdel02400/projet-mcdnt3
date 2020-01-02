@@ -14,6 +14,7 @@ import {
 
 const INITIAL_STATE = {
     user: null,
+    userId: null,
     loading: false,
     isLogged: false,
     error: '',
@@ -30,6 +31,8 @@ export default (state = INITIAL_STATE, action) => {
                 loading: true,
                 isLogged: false,
                 error: '',
+                user: null,
+                userId: null,
             };
         case ISLOGGED_FAILED:
             return {
@@ -50,6 +53,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 user: action.user,
+                userId: action.user._id,
                 isLogged: true,
                 error: '',
                 initializeUser: action.user.InitializeUser
@@ -61,11 +65,7 @@ export default (state = INITIAL_STATE, action) => {
                 isLogged: true,
                 error: '',
                 initializeUser: false,
-                user: {
-                    ...state.user,
-                    firstname: action.user.firstname,
-                    lastname: action.user.lastname
-                }
+                user: action.user
             };
         case SIGNUP_SUCCESS:
             return {
@@ -73,7 +73,8 @@ export default (state = INITIAL_STATE, action) => {
                 loading: false,
                 isLogged: true,
                 error: '',
-                initializeUser: true
+                initializeUser: true,
+                userId: action.userId
             };
         case SIGNIN_SUCCESS:
             return {

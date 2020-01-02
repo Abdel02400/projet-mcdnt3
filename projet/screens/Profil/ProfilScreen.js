@@ -26,7 +26,23 @@ class ProfilScreen extends Component {
     super(props);
     this.state = {
       user: null,
+      urlAvatar: null,
       images: [
+        { url: require('../../assets/images/media1.jpg'), id: 1 },
+        { url: require('../../assets/images/media2.jpg'), id: 2 },
+        { url: require('../../assets/images/media3.jpg'), id: 3 },
+        { url: require('../../assets/images/media4.jpg'), id: 4 },
+        { url: require('../../assets/images/media5.jpg'), id: 5 },
+        { url: require('../../assets/images/media1.jpg'), id: 1 },
+        { url: require('../../assets/images/media2.jpg'), id: 2 },
+        { url: require('../../assets/images/media3.jpg'), id: 3 },
+        { url: require('../../assets/images/media4.jpg'), id: 4 },
+        { url: require('../../assets/images/media5.jpg'), id: 5 },
+        { url: require('../../assets/images/media1.jpg'), id: 1 },
+        { url: require('../../assets/images/media2.jpg'), id: 2 },
+        { url: require('../../assets/images/media3.jpg'), id: 3 },
+        { url: require('../../assets/images/media4.jpg'), id: 4 },
+        { url: require('../../assets/images/media5.jpg'), id: 5 },
         { url: require('../../assets/images/media1.jpg'), id: 1 },
         { url: require('../../assets/images/media2.jpg'), id: 2 },
         { url: require('../../assets/images/media3.jpg'), id: 3 },
@@ -59,10 +75,12 @@ class ProfilScreen extends Component {
 
   componentWillMount() {
     this.props.navigation.setParams({ logout: this._logout });
+    let urlAvatar = "http://172.20.10.2:8000/" + this.props.userId + "-" + this.props.user.avatar;
     this.setState({
       ...this.state,
       user: this.props.user,
-      profilePictureModalVisible: false
+      profilePictureModalVisible: false,
+      urlAvatar: urlAvatar
     });
   }
 
@@ -166,7 +184,7 @@ class ProfilScreen extends Component {
           <View style={{ alignSelf: "center", marginTop: 5 }}>
             <View style={styles.profileImage}>
               <TouchableWithoutFeedback onLongPress={() => this.setProfilePictureModalVisible()} style={styles.touchableOpacity}>
-                <Image source={require("../../assets/images/profile-pic.png")} style={styles.image} resizeMode="center"></Image>
+                <Image source={{ uri : this.state.urlAvatar}} style={styles.image} resizeMode="center"/>
               </TouchableWithoutFeedback>
             </View>
           </View>
@@ -205,6 +223,8 @@ class ProfilScreen extends Component {
             </View>
           </Modal>
 
+          <Text style={styles.descriptionBloc}>{this.state.user.description}</Text>
+
           <View style={styles.infoContainer}>
             <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{this.state.user.firstname} {this.state.user.lastname}</Text>
             <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{this.state.user.role}</Text>
@@ -225,12 +245,8 @@ class ProfilScreen extends Component {
             </View>
           </View>
 
-          <View style={styles.updateButton}>
-            {this._renderButton()}
-          </View>
-
           <SafeAreaView style={styles.imageList}>
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
               <FlatList style={styles.flatListStyle} keyExtractor={(item, index) => index.toString()} data={this.state.images} numColumns={3} renderItem={({ item, index }) => {
                 return (
                   <View>
@@ -241,7 +257,7 @@ class ProfilScreen extends Component {
                 )
               }
               } />
-            </View>
+            </ScrollView>
           </SafeAreaView>
 
 
@@ -282,7 +298,14 @@ class ProfilScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+  },
+  descriptionBloc: {
+    margin: 5,
+    marginTop: 10,
+    borderColor: 'black',
+    borderWidth: 1,
+    height: 50,
+    textAlign: 'center'
   },
   imageList: {
     flex: 1,
@@ -474,6 +497,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
+    userId: state.auth.userId
   }
 }
 
