@@ -16,7 +16,7 @@ export default {
         data.append('token', token);
         data.append('fileData', {
             uri : Platform.OS === "android" ? avatar.uri : avatar.uri.replace("file://", ""),
-            type: avatar.type,
+            type: Platform.OS === "android" ? 'image/jpeg' : avatar.type,
             name: id,
         });
 
@@ -26,7 +26,9 @@ export default {
                 'Accept': 'application/json',
             },
         });
+
         return res.status === 200 ? res : false;
+
     },
     signup : function(email,password, role) {
 

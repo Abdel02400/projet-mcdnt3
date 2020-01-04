@@ -82,6 +82,7 @@ class ProfilScreen extends Component {
       profilePictureModalVisible: false,
       urlAvatar: urlAvatar
     });
+
   }
 
   askPermissionsAsync = async () => {
@@ -177,6 +178,7 @@ class ProfilScreen extends Component {
   };
 
   render() {
+
     return (
       <SafeAreaView style={styles.container}>
 

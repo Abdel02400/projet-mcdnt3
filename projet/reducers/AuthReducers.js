@@ -65,7 +65,8 @@ export default (state = INITIAL_STATE, action) => {
                 isLogged: true,
                 error: '',
                 initializeUser: false,
-                user: action.user
+                user: action.user,
+                userId: action.user._id
             };
         case SIGNUP_SUCCESS:
             return {
@@ -81,6 +82,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 user: action.user,
+                userId: action.user._id,
                 isLogged: true,
                 error: '',
                 initializeUser: action.user.InitializeUser
