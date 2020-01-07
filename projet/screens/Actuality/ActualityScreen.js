@@ -261,6 +261,11 @@ class ActualityScreen extends Component {
                                 <Text style={styles.tags}>Neotrad</Text>
                             </Animated.View>
 
+
+                            <Animated.View>
+                                <Text>Description lorem ipsum .......................</Text>
+                            </Animated.View>
+
                         </Animated.View>
                     </Animated.View>
                 )
