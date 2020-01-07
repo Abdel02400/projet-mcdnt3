@@ -8,16 +8,22 @@ import {
     Text,
     Dimensions,
     Animated,
-    PanResponder
+    PanResponder,
+    TouchableHighlight,
+    TouchableWithoutFeedback,
+    TouchableOpacity
 } from 'react-native';
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
+import { Ionicons } from "@expo/vector-icons";
 import AuthService from "../../utils/AuthService";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
-const Users = [
+
+// A REMPLACER AVEC CONTENU BASE DE DONNEES
+const Posts = [
     { id: "1", uri: require('../../assets/images/1.jpg') },
     { id: "2", uri: require('../../assets/images/2.jpg') },
     { id: "3", uri: require('../../assets/images/3.jpg') },
@@ -30,14 +36,26 @@ class ActualityScreen extends Component {
     constructor(props) {
         super(props);
         this._logout = this._logout.bind(this);
+        this.renderPosts = this.renderPosts.bind(this);
+        //    this.likeHandling = this.likeHandling.bind(this);
+        //   this.likeNbHandling = this.likeNbHandling.bind(this);
         this.state = {
             user: null,
-            currentIndex: 0
+            currentIndex: 0,
+            post: {
+                likes: {
+                    liked: false,
+                    likeNb: 998,
+                    dislikeNb: 750
+                },
+                comments: {
+                    commentNb: 1500
+                }
+            }
         };
-        this.renderUsers = this.renderUsers.bind(this);
+        this.renderPosts = this.renderPosts.bind(this);
         // SWIPE CARDS
-        this.position = new Animated.ValueXY()
-
+        this.position = new Animated.ValueXY();
         this.rotate = this.position.x.interpolate({
             inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
             outputRange: ['-30deg', '0deg', '10deg'],
@@ -59,6 +77,12 @@ class ActualityScreen extends Component {
         })
         this.dislikeOpacity = this.position.x.interpolate({
             inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
+            outputRange: [1, 0, 0],
+            extrapolate: 'clamp'
+        })
+
+        this.profileOpacity = this.position.y.interpolate({
+            inputRange: [-SCREEN_HEIGHT / 2, 0, SCREEN_HEIGHT / 2],
             outputRange: [1, 0, 0],
             extrapolate: 'clamp'
         })
@@ -90,7 +114,9 @@ class ActualityScreen extends Component {
                         this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
                             this.position.setValue({ x: 0, y: 0 })
                         })
-                    })
+                    });
+                    // LIKE PHOTO BRANCHEMENT
+                    this.toggleLike();
                 }
                 else if (gestureState.dx < -120) {
                     Animated.spring(this.position, {
@@ -99,7 +125,9 @@ class ActualityScreen extends Component {
                         this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
                             this.position.setValue({ x: 0, y: 0 })
                         })
-                    })
+                    });
+                    // DISLIKE PHOTO BRANCHEMENT
+
                 }
                 else {
                     Animated.spring(this.position, {
@@ -135,73 +163,169 @@ class ActualityScreen extends Component {
         this.props.navigation.setParams({ logout: this._logout });
         this.setState({
             ...this.state,
-            user: this.props.user
+            user: this.props.user,
         });
     }
 
-        // Fonctiond de rendu des cards
-        renderUsers = () => {
 
-            return Users.map((item, i) => {
-    
-    
-                if (i < this.state.currentIndex) {
-                    return null
-                }
-                else if (i === this.state.currentIndex) {
-    
-                    return (
-                        <Animated.View
-                            {...this.panResponder.panHandlers}
-                            key={item.id} style={[this.rotateAndTranslate, { height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, position: 'absolute' }]}>
-                            <View>
-                                <Text>Bonjour {this.state.user.firstname} {this.state.user.lastname} </Text>
-                            </View>
-                            <Animated.View style={{ opacity: this.likeOpacity, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
-                                <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>LIKE</Text>
-
-                            </Animated.View>
-
-                            <Animated.View style={{ opacity: this.dislikeOpacity, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
-                                <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NOPE</Text>
-
-                            </Animated.View>
-
-                            <Image
-                                style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
-                                source={item.uri} />
-
-                        </Animated.View>
-                    )
-                }
-                else {
-                    return (
-                        <Animated.View
-    
-                            key={item.id} style={[{
-                                opacity: this.nextCardOpacity,
-                                transform: [{ scale: this.nextCardScale }],
-                                height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, position: 'absolute'
-                            }]}>
-                            <Animated.View style={{ opacity: 0, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
-                                <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>LIKE</Text>
-    
-                            </Animated.View>
-    
-                            <Animated.View style={{ opacity: 0, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
-                                <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NOPE</Text>
-    
-                            </Animated.View>
-    
-                            <Image
-                                style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
-                                source={item.uri} />
-    
-                        </Animated.View>
-                    )
-                }
-            }).reverse()
+    lastTap = null;
+    handleDoubleTap = () => {
+        const now = Date.now();
+        const DOUBLE_PRESS_DELAY = 300;
+        if (this.lastTap && (now - this.lastTap) < DOUBLE_PRESS_DELAY) {
+            this.toggleLike();
+        } else {
+            this.lastTap = now;
         }
+    }
+
+    toggleLike = () => {
+        this.setState((state) => {
+            return {
+                post: {
+                    likes: {
+                        liked: !state.post.likes.liked,
+                        likeNb: state.post.likes.likeNb + 1
+                    },
+                    comments: {
+                        commentNb: state.post.comments.commentNb
+                    }
+                }
+            }
+        });
+    }
+
+
+
+    // Fonction de rendu des cards
+    renderPosts = () => {
+
+        return Posts.map((item, i) => {
+
+
+            if (i < this.state.currentIndex) {
+                return null
+            }
+            else if (i === this.state.currentIndex) {
+
+                return (
+                    <Animated.View
+                        {...this.panResponder.panHandlers}
+                        key={item.id} style={[this.rotateAndTranslate, { height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, position: 'absolute', borderRadius: 20 }]}>
+                        <Animated.View style={{ opacity: this.likeOpacity, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
+                            <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>LIKE</Text>
+                        </Animated.View>
+
+                        <Animated.View style={{ opacity: this.dislikeOpacity, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
+                            <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NOPE</Text>
+                        </Animated.View>
+
+                        <Animated.View style={{ height: "5%", width: "100%", backgroundColor: "white", justifyContent: "center", }}>
+                            <Text style={{ color: 'black', textDecorationLine: "underline", fontSize: 25, fontWeight: '400', padding: 10, textAlign: "center" }}>Artist Name</Text>
+                        </Animated.View>
+
+                        <Animated.View style={{ height: "80%", marginBottom: "2%"}}>
+                            <Image
+                                style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 15}}
+                                source={item.uri} />
+                        </Animated.View>
+
+
+
+                        <Animated.View style={{ height: "15%", width: "100%", backgroundColor: "transparent", flex: 1, flexDirection: "column" }}>
+                            <Animated.View style={{ flex: 1, flexDirection: "row", height: "50%", justifyContent: "space-between" }}>
+                                {/* BLOC LIKES */}
+                                <Animated.View style={{ flex: 1 }}>
+                                    <TouchableWithoutFeedback style={{}} onPress={() => this.toggleLike()}>
+                                        <Animated.View style={{ flexDirection: "row" }}>
+                                            <Ionicons name={this.state.post.likes.liked ? "md-heart" : "md-heart-empty"} style={{ fontSize: 30 }}></Ionicons>
+                                            <Text style={{ fontSize: 30 }}>{this.state.post.likes.likeNb >= 1000 ? Math.floor(this.state.post.likes.likeNb / 1000) + "K" : this.state.post.likes.likeNb}</Text>
+                                        </Animated.View>
+                                    </TouchableWithoutFeedback>
+                                </Animated.View>
+                                {/* FIN BLOC LIKES */}
+                                {/* BLOC COMMENTS */}
+                                <Animated.View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
+                                    <Ionicons name="md-text" style={{ fontSize: 50 }}></Ionicons>
+                                    <Text style={{ fontSize: 30 }}>{this.state.post.comments.commentNb >= 1000 ? Math.floor(this.state.post.comments.commentNb / 1000) + "K" : this.state.post.comments.commentNb}</Text>
+                                </Animated.View>
+                                {/* FIN BLOC COMMENTS */}
+                            </Animated.View>
+
+
+                            <Animated.View style={{flexDirection: "row", flex: 1, height: "50%", marginTop:"2%", justifyContent:"center"}}>
+                                <Text style={styles.tags}>Dotwork</Text>
+                                <Text style={styles.tags}>  |  </Text>
+                                <Text style={styles.tags}>Tribal</Text>
+                                <Text style={styles.tags}>  |  </Text>
+                                <Text style={styles.tags}>Neotrad</Text>
+                            </Animated.View>
+
+                        </Animated.View>
+                    </Animated.View>
+                )
+            }
+            else {
+                return (
+                    <Animated.View
+                        key={item.id} style={[{
+                            opacity: this.nextCardOpacity,
+                            transform: [{ scale: this.nextCardScale }],
+                            height: SCREEN_HEIGHT - 120, width: SCREEN_WIDTH, padding: 10, position: 'absolute', borderRadius: 20
+                        }]}>
+                        <Animated.View style={{ opacity: 0, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
+                            <Text style={{ borderWidth: 1, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>LIKE</Text>
+                        </Animated.View>
+
+                        <Animated.View style={{ opacity: 0, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
+                            <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NOPE</Text>
+                        </Animated.View>
+                        <Animated.View style={{ height: "5%", width: "100%", backgroundColor: "white", justifyContent: "center", }}>
+                            <Text style={{ color: 'black', textDecorationLine: "underline", fontSize: 25, fontWeight: '400', padding: 10, textAlign: "center" }}>Artist Name</Text>
+                        </Animated.View>
+
+                        <Animated.View style={{ height: "80%" }}>
+                            <Image
+                                style={{ flex: 1, height: null, width: null, resizeMode: 'cover' }}
+                                source={item.uri} />
+                        </Animated.View>
+
+
+
+                        <Animated.View style={{ height: "15%", width: "100%", backgroundColor: "transparent", flex: 1, flexDirection: "column" }}>
+                            <Animated.View style={{ flex: 1, flexDirection: "row", height: "50%", justifyContent: "space-between" }}>
+                                {/* BLOC LIKES */}
+                                <Animated.View style={{ flex: 1}}>
+                                    <TouchableWithoutFeedback style={{}} onPress={() => this.toggleLike()}>
+                                        <Animated.View style={{ flexDirection: "row" }}>
+                                            <Ionicons name={this.state.post.likes.liked ? "md-heart" : "md-heart-empty"} style={{ fontSize: 30 }}></Ionicons>
+                                            <Text style={{ fontSize: 30 }}>{this.state.post.likes.likeNb >= 1000 ? Math.floor(this.state.post.likes.likeNb / 1000) + "K" : this.state.post.likes.likeNb}</Text>
+                                        </Animated.View>
+                                    </TouchableWithoutFeedback>
+                                </Animated.View>
+                                {/* FIN BLOC LIKES */}
+                                {/* BLOC COMMENTS */}
+                                <Animated.View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
+                                    <Ionicons name="md-text" style={{ fontSize: 50 }}></Ionicons>
+                                    <Text style={{ fontSize: 30 }}>{this.state.post.comments.commentNb >= 1000 ? Math.floor(this.state.post.comments.commentNb / 1000) + "K" : this.state.post.comments.commentNb}</Text>
+                                </Animated.View>
+                                {/* FIN BLOC COMMENTS */}
+                            </Animated.View>
+
+                            <Animated.View style={{flexDirection: "row", flex: 1, height: "50%", justifyContent:"center"}}>
+                                <Text style={styles.tags}>Dotwork</Text>
+                                <Text style={styles.tags}> | </Text>
+                                <Text style={styles.tags}>Tribal</Text>
+                                <Text style={styles.tags}> | </Text>
+                                <Text style={styles.tags}>Neotrad</Text>
+                            </Animated.View>
+                        </Animated.View>
+
+                    </Animated.View>
+                )
+            }
+        }).reverse()
+    }
 
 
     _logout = () => {
@@ -216,14 +340,8 @@ class ActualityScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{ height: 60 }}>
-
-                </View>
                 <View style={{ flex: 1 }}>
-                    {this.renderUsers()}
-                </View>
-                <View style={{ height: 60 }}>
-
+                    {this.renderPosts()}
                 </View>
             </View>
         );
@@ -247,8 +365,6 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         height: "80%",
-        marginTop: "5%",
-        marginBottom: "3%",
         width: "100%",
         backgroundColor: "transparent"
     },
@@ -291,14 +407,10 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline'
     },
     tags: {
-        width: "100%"
+        fontSize: 17,
+        textDecorationLine: "underline",
+        color: "black",
     },
-    tagContainer: {
-        alignItems: "center"
-    },
-    tagText: {
-        fontSize: 13,
-    }
 });
 
 const mapStateToProps = state => {
@@ -307,4 +419,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, {  })(ActualityScreen)
+export default connect(mapStateToProps, {})(ActualityScreen)

@@ -1,5 +1,4 @@
 node_modules/**/*
-utils/AuthService.js
 .expo/*
 npm-debug.*
 *.jks
