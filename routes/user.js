@@ -26,26 +26,29 @@ module.exports = (app) => {
 
         const token = req.params.token;
             User.find({"token":token}, {"__v":0}).then(user => {
-                var foundPosts = [];
-                Promise.all(user[0].posts.map(post => {
-                    return Post.findOne({_id: post}).exec().catch(err => {
-                        return null;
+                if(user.length > 0){
+                    var foundPosts = [];
+                    Promise.all(user[0].posts.map(post => {
+                        return Post.findOne({_id: post}).exec().catch(err => {
+                            return null;
+                        });
+                    })).then(foundPosts => {
+                        let photos = foundPosts.map(
+                            function(post) {
+                                return post.url;
+                            }
+                        );
+                        user[0].posts = photos;
+                        console.log(user[0]);
+                    }).catch(err => {
                     });
-                })).then(foundPosts => {
-                    let photos = foundPosts.map(
-                        function(post) {
-                            return post.url;
-                        }
-                    );
-                    user[0].posts = photos;
-                    console.log(user[0]);
-                }).catch(err => {
-                });
+                }else {
+                    res.status(201).send("aucun utilisateur trouvé");
+                }
             }).catch(err => {
-                res.status(404).send("aucun utilisateur trouver avec ce token");
+                res.status(401).send("erreur serveur");
             })
-
-    })
+    });
 
     app.post('/signup', cryptPassword, (req, res) => {
         var user = new User(req.body.user);
