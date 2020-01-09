@@ -3,17 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="bcacdc26-5499-47c4-a1e6-82d517231410" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5e127e566ae3eb2d282ebfe6-avatar.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5e14adeb6249f7351c707549-1578413580287.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5e14adeb6249f7351c707549-1578415186516.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5e14adeb6249f7351c707549-1578495865605.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5e14adeb6249f7351c707549-1578495954701.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5e14adeb6249f7351c707549-1578498118861.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5e14adeb6249f7351c707549-1578585436413.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/5e14adeb6249f7351c707549-avatar.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projet/actions/GetPhotoActions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projet/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/actions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projet/actions/types.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/actions/types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projet/reducers/AuthReducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/reducers/AuthReducers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projet/utils/AuthService.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/utils/AuthService.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/user.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,8 +21,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="88" column="7" selection-start-line="88" selection-start-column="7" selection-end-line="88" selection-end-column="7" />
+            <state relative-caret-position="155">
+              <caret line="74" selection-start-line="74" selection-end-line="74" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -37,10 +31,58 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/projet/reducers/AuthReducers.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="163">
+              <caret line="48" column="26" lean-forward="true" selection-start-line="48" selection-start-column="26" selection-end-line="48" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/projet/actions/UpdateProfilActions.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
+              <folding>
+                <element signature="e#0#102#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/projet/actions/types.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/projet/actions/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/projet/actions/AddPhotoActions.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="11" column="42" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/user.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="45" column="69" lean-forward="true" selection-start-line="45" selection-start-column="69" selection-end-line="45" selection-end-column="69" />
+            <state relative-caret-position="314">
+              <caret line="156" column="53" selection-start-line="156" selection-start-column="53" selection-end-line="156" selection-end-column="53" />
             </state>
           </provider>
         </entry>
@@ -66,6 +108,10 @@
       <find>InitializeUserScreen</find>
       <find>urlA</find>
       <find>iconisvisible</find>
+      <find>add</find>
+      <find>addPho</find>
+      <find>addPhoto</find>
+      <find>isadd</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -114,16 +160,16 @@
         <option value="$PROJECT_DIR$/projet/screens/InitializeUser/InitializeUserScreen.js" />
         <option value="$PROJECT_DIR$/projet/actions/InitializeUserActions.js" />
         <option value="$PROJECT_DIR$/projet/actions/AddPhotoActions.js" />
-        <option value="$PROJECT_DIR$/projet/reducers/AuthReducers.js" />
         <option value="$PROJECT_DIR$/models/post.js" />
         <option value="$PROJECT_DIR$/models/user.js" />
-        <option value="$PROJECT_DIR$/projet/actions/types.js" />
-        <option value="$PROJECT_DIR$/projet/actions/index.js" />
         <option value="$PROJECT_DIR$/projet/actions/GetPhotoActions.js" />
         <option value="$PROJECT_DIR$/projet/actions/UpdateProfilActions.js" />
         <option value="$PROJECT_DIR$/projet/node_modules/metro-config/src/defaults/blacklist.js" />
         <option value="$PROJECT_DIR$/projet/utils/AuthService.js" />
         <option value="$PROJECT_DIR$/routes/user.js" />
+        <option value="$PROJECT_DIR$/projet/actions/types.js" />
+        <option value="$PROJECT_DIR$/projet/actions/index.js" />
+        <option value="$PROJECT_DIR$/projet/reducers/AuthReducers.js" />
         <option value="$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js" />
       </list>
     </option>
@@ -155,7 +201,14 @@
             <path>
               <item name="projet-mcdnt3" type="b2602c69:ProjectViewProjectNode" />
               <item name="projet-mcdnt3" type="462c0819:PsiDirectoryNode" />
-              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="projet" type="462c0819:PsiDirectoryNode" />
+              <item name="actions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="projet-mcdnt3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="projet-mcdnt3" type="462c0819:PsiDirectoryNode" />
+              <item name="projet" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -337,18 +390,21 @@
       <workItem from="1578586741322" duration="19000" />
       <workItem from="1578586777991" duration="98000" />
       <workItem from="1578586895769" duration="112000" />
-      <workItem from="1578589658873" duration="1164000" />
+      <workItem from="1578589658873" duration="1997000" />
+      <workItem from="1578595634329" duration="1787000" />
+      <workItem from="1578597440489" duration="1792000" />
+      <workItem from="1578599255702" duration="474000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="241668000" />
+    <option name="totallyTimeSpent" value="246554000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3197051" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.33378017" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -666,41 +722,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/projet/actions/AddPhotoActions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="33" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/projet/actions/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="34" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/projet/actions/types.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/projet/actions/GetPhotoActions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="28" column="44" selection-start-line="28" selection-start-column="44" selection-end-line="28" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#90#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/projet/actions/GetPhotoActions.js" />
     <entry file="file://$PROJECT_DIR$/projet/node_modules/metro-config/src/defaults/blacklist.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
           <caret line="18" column="2" selection-start-line="18" selection-start-column="2" selection-end-line="18" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/projet/utils/AuthService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -714,31 +747,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/projet/utils/AuthService.js">
+    <entry file="file://$PROJECT_DIR$/projet/actions/types.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="100" column="10" lean-forward="true" selection-start-line="100" selection-start-column="10" selection-end-line="100" selection-end-column="10" />
+        <state relative-caret-position="272">
+          <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/projet/reducers/AuthReducers.js">
+    <entry file="file://$PROJECT_DIR$/projet/actions/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="82" column="14" selection-start-line="82" selection-start-column="14" selection-end-line="82" selection-end-column="14" />
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/projet/actions/AddPhotoActions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="11" column="42" selection-start-line="11" selection-start-column="42" selection-end-line="11" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/user.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="45" column="69" lean-forward="true" selection-start-line="45" selection-start-column="69" selection-end-line="45" selection-end-column="69" />
+        <state relative-caret-position="314">
+          <caret line="156" column="53" selection-start-line="156" selection-start-column="53" selection-end-line="156" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/projet/reducers/AuthReducers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="48" column="26" lean-forward="true" selection-start-line="48" selection-start-column="26" selection-end-line="48" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="88" column="7" selection-start-line="88" selection-start-column="7" selection-end-line="88" selection-end-column="7" />
+        <state relative-caret-position="155">
+          <caret line="74" selection-start-line="74" selection-end-line="74" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>

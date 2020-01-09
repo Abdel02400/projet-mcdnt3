@@ -35,11 +35,14 @@ module.exports = (app) => {
                     })).then(foundPosts => {
                         let photos = foundPosts.map(
                             function(post) {
-                                return post.url;
+                                return {url: post.url, id: post._id};
                             }
                         );
-                        user[0].posts = photos;
-                        console.log(user[0]);
+                        user = {
+                            ...user[0]._doc,
+                            posts: photos
+                        }
+                        res.status(200).send(user);
                     }).catch(err => {
                     });
                 }else {
@@ -135,7 +138,24 @@ module.exports = (app) => {
                         .then(user => {
                             generateToken(user.id)
                                 .then(token => {
-                                    res.status(200).header('x-auth', token).send(user);
+                                    var foundPosts = [];
+                                    Promise.all(user.posts.map(post => {
+                                        return Post.findOne({_id: post}).exec().catch(err => {
+                                            return null;
+                                        });
+                                    })).then(foundPosts => {
+                                        let photos = foundPosts.map(
+                                            function(post) {
+                                                return {url: post.url, id: post._id};
+                                            }
+                                        );
+                                        let Newuser = {
+                                            ...user._doc,
+                                            posts: photos
+                                        }
+                                        res.status(200).header('x-auth', token).send(Newuser);
+                                    }).catch(err => {
+                                    });
                                 })
                                 .catch(error => {
                                     res.status(401).send("l'ajout du token a échoué");

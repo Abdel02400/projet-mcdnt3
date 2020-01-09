@@ -31,28 +31,7 @@ class ProfilScreen extends Component {
       profilePictureModalVisible: false,
       userId: null,
       add: null,
-      images: [
-        { url: require('../../assets/images/media1.jpg'), id: 1 },
-        { url: require('../../assets/images/media2.jpg'), id: 2 },
-        { url: require('../../assets/images/media3.jpg'), id: 3 },
-        { url: require('../../assets/images/media4.jpg'), id: 4 },
-        { url: require('../../assets/images/media5.jpg'), id: 5 },
-        { url: require('../../assets/images/media1.jpg'), id: 1 },
-        { url: require('../../assets/images/media2.jpg'), id: 2 },
-        { url: require('../../assets/images/media3.jpg'), id: 3 },
-        { url: require('../../assets/images/media4.jpg'), id: 4 },
-        { url: require('../../assets/images/media5.jpg'), id: 5 },
-        { url: require('../../assets/images/media1.jpg'), id: 1 },
-        { url: require('../../assets/images/media2.jpg'), id: 2 },
-        { url: require('../../assets/images/media3.jpg'), id: 3 },
-        { url: require('../../assets/images/media4.jpg'), id: 4 },
-        { url: require('../../assets/images/media5.jpg'), id: 5 },
-        { url: require('../../assets/images/media1.jpg'), id: 1 },
-        { url: require('../../assets/images/media2.jpg'), id: 2 },
-        { url: require('../../assets/images/media3.jpg'), id: 3 },
-        { url: require('../../assets/images/media4.jpg'), id: 4 },
-        { url: require('../../assets/images/media5.jpg'), id: 5 },
-      ]
+      images: null
     };
     this._logout = this._logout.bind(this);
   }
@@ -85,13 +64,19 @@ class ProfilScreen extends Component {
       user: this.props.user,
       profilePictureModalVisible: false,
       avatar: avatar,
-      userId: this.props.user._id
+      userId: this.props.user._id,
+      images: this.props.user.posts
     });
 
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    if(nextProps.addPhoto) this.setProfilePictureModalNotVisible();
+  async componentWillReceiveProps(nextProps, nextContext) {
+    if(nextProps.isaddPhoto) await this.setProfilePictureModalNotVisible();
+    this.setState({
+      ...this.state,
+      user: nextProps.user,
+      images: nextProps.user.posts
+    });
   }
 
   /*askPermissionsAsync = async () => {
@@ -117,10 +102,13 @@ class ProfilScreen extends Component {
       })
     }
 
-    this.setState({
-      ...this.state,
-      avatar: result.uri,
-    });
+    if(this.state.add === 'addAvatar'){
+      this.setState({
+        ...this.state,
+        avatar: result.uri,
+      });
+    }
+
 
     if(this.state.add === 'addAvatar') this.props.UpdateProfil(result, this.state.userId);
     else this.props.addPhoto(result, this.state.userId);
@@ -142,10 +130,12 @@ class ProfilScreen extends Component {
       return;
     }
 
-    this.setState({
-      ...this.state,
-      avatar: result.uri,
-    });
+    if(this.state.add === 'addAvatar'){
+      this.setState({
+        ...this.state,
+        avatar: result.uri,
+      });
+    }
 
     if(this.state.add === 'addAvatar') this.props.UpdateProfil(result, this.state.userId);
     else this.props.addPhoto(result, this.state.userId);
@@ -269,7 +259,7 @@ class ProfilScreen extends Component {
                 return (
                   <View>
                     <TouchableHighlight focusedOpacity={0} onPress={() => this._goToPost(item.id)}>
-                      <Image style={styles.imageListItem} source={item.url} />
+                      <Image style={styles.imageListItem} source={{ uri : "http://172.20.10.2:8000/" + item.url }} />
                     </TouchableHighlight>
                   </View>
                 )
@@ -537,9 +527,9 @@ const mapStateToProps = state => {
     user: state.auth.user,
     userId: state.auth.userId,
     loading: state.auth.loading,
-    addPhoto: state.auth.addPhoto,
+    isaddPhoto: state.auth.isaddPhoto,
   }
-}
+};
 
 export default connect(mapStateToProps, { UpdateProfil, addPhoto })(ProfilScreen)
 

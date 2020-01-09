@@ -25,7 +25,7 @@ const INITIAL_STATE = {
     isLogged: false,
     error: '',
     initializeUser: false,
-    addPhoto: false,
+    isaddPhoto: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -62,7 +62,7 @@ export default (state = INITIAL_STATE, action) => {
                 loading: false,
                 error: action.error,
                 isLogged: false,
-                addPhoto: false
+                isaddPhoto: false
             };
         case INITIALIZEUSER_FAILED:
             return {
@@ -79,13 +79,14 @@ export default (state = INITIAL_STATE, action) => {
                 userId: action.user._id,
                 isLogged: true,
                 error: '',
-                initializeUser: action.user.InitializeUser
+                initializeUser: action.user.InitializeUser,
             };
-        case ADDPHOTO_SUCCESS:
         case UPDATEPROFIL_SUCCESS:
+        case ADDPHOTO_SUCCESS:
             return {
                 ...this.state,
-                addPhoto: true
+                isaddPhoto: true,
+                user: action.user
             };
         case INITIALIZEUSER_SUCCESS:
             return {
