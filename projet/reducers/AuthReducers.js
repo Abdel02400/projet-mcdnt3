@@ -9,7 +9,13 @@ import {
     ISLOGGED_FAILED,
     INITIALIZEUSER_ATTEMPT,
     INITIALIZEUSER_FAILED,
-    INITIALIZEUSER_SUCCESS
+    INITIALIZEUSER_SUCCESS,
+    UPDATEPROFIL_ATTEMPT,
+    UPDATEPROFIL_FAILED,
+    UPDATEPROFIL_SUCCESS,
+    ADDPHOTO_ATTEMPT,
+    ADDPHOTO_FAILED,
+    ADDPHOTO_SUCCESS
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -19,6 +25,7 @@ const INITIAL_STATE = {
     isLogged: false,
     error: '',
     initializeUser: false,
+    addPhoto: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -34,6 +41,13 @@ export default (state = INITIAL_STATE, action) => {
                 user: null,
                 userId: null,
             };
+        case ADDPHOTO_ATTEMPT:
+        case UPDATEPROFIL_ATTEMPT:
+            return {
+                ...state,
+                loading: true,
+                error: '',
+            };
         case ISLOGGED_FAILED:
             return {
                 ...state,
@@ -41,6 +55,15 @@ export default (state = INITIAL_STATE, action) => {
             }
         case SIGNIN_FAILED:
         case SIGNUP_FAILED:
+        case ADDPHOTO_FAILED:
+        case UPDATEPROFIL_FAILED:
+            return {
+                ...this.state,
+                loading: false,
+                error: action.error,
+                isLogged: false,
+                addPhoto: false
+            };
         case INITIALIZEUSER_FAILED:
             return {
                 ...state,
@@ -57,6 +80,12 @@ export default (state = INITIAL_STATE, action) => {
                 isLogged: true,
                 error: '',
                 initializeUser: action.user.InitializeUser
+            };
+        case ADDPHOTO_SUCCESS:
+        case UPDATEPROFIL_SUCCESS:
+            return {
+                ...this.state,
+                addPhoto: true
             };
         case INITIALIZEUSER_SUCCESS:
             return {

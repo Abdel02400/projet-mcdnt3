@@ -1,4 +1,5 @@
 const User = require('./../models/user');
+const Post = require('./../models/post');
 const cryptPassword = require('../middleware/cryptPassword');
 const generateToken = require('../utils/generateToken');
 const bcrypt = require('bcryptjs');
@@ -14,9 +15,10 @@ module.exports = (app) => {
         filename(req, file, callback) {
             let extArray = file.mimetype.split("/");
             let extension = extArray[extArray.length - 1];
-            callback(null, `${file.originalname}-avatar.${extension}`)
+            if(req.body.storage === 'addPhoto') callback(null, `${file.originalname}-${Date.now()}.${extension}`);
+            else callback(null, `${file.originalname}-avatar.${extension}`)
         },
-    })
+    });
 
     const upload = multer({ storage: Storage })
 
@@ -24,7 +26,21 @@ module.exports = (app) => {
 
         const token = req.params.token;
             User.find({"token":token}, {"__v":0}).then(user => {
-                res.status(200).send(user[0]);
+                var foundPosts = [];
+                Promise.all(user[0].posts.map(post => {
+                    return Post.findOne({_id: post}).exec().catch(err => {
+                        return null;
+                    });
+                })).then(foundPosts => {
+                    let photos = foundPosts.map(
+                        function(post) {
+                            return post.url;
+                        }
+                    );
+                    user[0].posts = photos;
+                    console.log(user[0]);
+                }).catch(err => {
+                });
             }).catch(err => {
                 res.status(404).send("aucun utilisateur trouver avec ce token");
             })
@@ -71,7 +87,63 @@ module.exports = (app) => {
             }).catch(error => {
             res.status(404).send("l'ajout des information a échoué");
         })
+    });
+
+    app.post('/UpdateProfil', upload.single('fileData'), (req, res) => {
+        var {token} = req.body;
+
+        let extArray = req.file.mimetype.split("/");
+        let extension = extArray[extArray.length - 1];
+
+        User.findOneAndUpdate({ token: token }, {avatar: 'avatar.' + extension},{new: true})
+            .then(user => {
+                fs.readFile(req.file.path,(err, contents)=> {
+                    if (err) {
+                        res.status(404).send("l'ajout des information a échoué");
+                    } else {
+                        generateToken(user.id)
+                            .then(token => {
+                                res.status(200).header('x-auth', token).send(user);
+                            })
+                            .catch(error => {
+                                res.status(401).send("l'ajout du token a échoué");
+                            });
+                    }
+                })
+            }).catch(error => {
+            res.status(404).send("l'ajout des information a échoué");
+        })
     })
+
+    app.post('/addPhoto', upload.single('fileData'), (req, res) => {
+        var {token} = req.body;
+
+        fs.readFile(req.file.path,(err, contents)=> {
+            if (err) {
+                res.status(404).send("l'ajout des photos a échoué");
+            } else {
+                let extArray = req.file.mimetype.split("/");
+                let extension = extArray[extArray.length - 1];
+
+                var post = new Post({ url : req.file.filename});
+
+                post.save().then(newPost => {
+                    User.findOneAndUpdate({ token: token }, { "$push": { "posts": newPost._id } },{new: true})
+                        .then(user => {
+                            generateToken(user.id)
+                                .then(token => {
+                                    res.status(200).header('x-auth', token).send(user);
+                                })
+                                .catch(error => {
+                                    res.status(401).send("l'ajout du token a échoué");
+                                });
+                        }).catch(error => {
+                        res.status(404).send("l'ajout des photos a échoué");
+                    })
+                })
+            }
+        })
+    });
 
     app.post('/login', (req, res) => {
         var {email, password} = req.body.user;
@@ -97,4 +169,4 @@ module.exports = (app) => {
 
     });
 
-}
+};

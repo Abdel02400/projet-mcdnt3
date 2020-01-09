@@ -13,20 +13,24 @@ import {
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
 import AuthService from "../../utils/AuthService";
-import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { countElement } from "../../utils/GlobalSettings";
 import { Spinner } from "../../components/Spinner";
-import ButtonField from "../../components/ButtonField";
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import {UpdateProfil} from "../../actions";
+import {addPhoto} from "../../actions";
+import ButtonField from "../../components/ButtonField";
 
 class ProfilScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       user: null,
-      urlAvatar: null,
+      avatar: null,
+      profilePictureModalVisible: false,
+      userId: null,
+      add: null,
       images: [
         { url: require('../../assets/images/media1.jpg'), id: 1 },
         { url: require('../../assets/images/media2.jpg'), id: 2 },
@@ -75,44 +79,52 @@ class ProfilScreen extends Component {
 
   componentWillMount() {
     this.props.navigation.setParams({ logout: this._logout });
-    let urlAvatar = "http://172.20.10.2:8000/" + this.props.userId + "-" + this.props.user.avatar;
+    let avatar = "http://172.20.10.2:8000/" + this.props.userId + "-" + this.props.user.avatar;
     this.setState({
       ...this.state,
       user: this.props.user,
       profilePictureModalVisible: false,
-      urlAvatar: urlAvatar
+      avatar: avatar,
+      userId: this.props.user._id
     });
 
   }
 
-  askPermissionsAsync = async () => {
+  componentWillReceiveProps(nextProps, nextContext) {
+    if(nextProps.addPhoto) this.setProfilePictureModalNotVisible();
+  }
+
+  /*askPermissionsAsync = async () => {
     const {status: cameraPermission} = await Permissions.askAsync(Permissions.CAMERA);
     const {status: cameraRollPermission} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     // you would probably do something to verify that permissions
     // are actually granted, but I'm skipping that for brevity
     alert("Permissions demandées");
-  };
+  };*/
 
   async updateProfileImageFromGallery() {
-  /*  if(Platform.OS == "ios") {
-      let resultPerm = await this.askPermissionsAsync({});
-      alert("Permissions demandées");
-      let result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        allowsMultipleSelection: false
-      });
-      if (result.cancelled) {
-        return;
-      }
-    } */
 
-      let result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        allowsMultipleSelection: false
-      });
-      if (result.cancelled) {
-        return;
-      }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      allowsMultipleSelection: false
+    });
+
+
+    if (result.cancelled) {
+      this.setState({
+        ...this.state,
+        avatar: 'none',
+      })
+    }
+
+    this.setState({
+      ...this.state,
+      avatar: result.uri,
+    });
+
+    if(this.state.add === 'addAvatar') this.props.UpdateProfil(result, this.state.userId);
+    else this.props.addPhoto(result, this.state.userId);
+
   }
 
   async updateProfilePictureFromCamera() {
@@ -123,35 +135,31 @@ class ProfilScreen extends Component {
     });
 
     if (result.cancelled) {
+      this.setState({
+        ...this.state,
+        avatar: 'none',
+      });
       return;
     }
 
-    // Sauvegarde img en local
-    let localUri = result.uri;
-    let filename = localUri.split('/').pop();
+    this.setState({
+      ...this.state,
+      avatar: result.uri,
+    });
 
-    // Gestion du type de l'image
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-
-    // On prépare les données avec FormData
-    let formData = new FormData();
-
-    // Exemple de requete serveur
-    /* formData.append('photo', { uri: localUri, name: filename, type });
-  
-    return await fetch(YOUR_SERVER_URL, {
-      method: 'POST',
-      body: formData,
-      header: {
-        'content-type': 'multipart/form-data',
-      },
-    }); */
+    if(this.state.add === 'addAvatar') this.props.UpdateProfil(result, this.state.userId);
+    else this.props.addPhoto(result, this.state.userId);
   }
 
-  setProfilePictureModalVisible() {
-    this.setState({ profilePictureModalVisible: true });
-    console.log("SET CHANGED");
+  setProfilePictureModalVisible(add) {
+    this.setState({ ...this.state,
+      profilePictureModalVisible: true,
+      add: add
+    });
+  }
+
+  setProfilePictureModalNotVisible() {
+    this.setState({ ...this.state, profilePictureModalVisible: false });
   }
 
   _goToPost(idImage) {
@@ -159,16 +167,41 @@ class ProfilScreen extends Component {
     alert("Go To image Post number " + idImage);
   }
 
-  _renderButton() {
-    if (this.props.loading) return <Spinner />
+  _renderModal() {
+    if (this.props.loading){
+      return <Spinner/>
+    }
     return (
-      <ButtonField
-        titleText="modifier mon profil"
-        titleTextSize={15}
-        textColor={'black'}
-        buttonColor={'white'}
-        onPress={e => this.onPressBtn(e)}
-      />
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          marginTop: 20,
+        }}>
+          <Text>Mes photo :</Text>
+          <TouchableOpacity onPress={() => this.updateProfilePictureFromCamera()}>
+            <Text>Camera</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.updateProfileImageFromGallery()}>
+            <Text>Gallerie</Text>
+          </TouchableOpacity>
+        </View>
+    )
+  }
+
+  _renderButton() {
+    if(this.props.loading) return <Spinner />
+    return (
+        <View style={styles.btnAdd}>
+          <ButtonField
+              titleText="ajouter une photo"
+              titleTextSize={15}
+              textColor={'black'}
+              buttonColor={'white'}
+              onPress={() => this.setProfilePictureModalVisible('addPhoto')}
+          />
+        </View>
     )
   }
 
@@ -183,46 +216,25 @@ class ProfilScreen extends Component {
       <SafeAreaView style={styles.container}>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ alignSelf: "center", marginTop: 5 }}>
+          <View style={{ alignItems: "center", marginTop: 5 }}>
             <View style={styles.profileImage}>
-              <TouchableWithoutFeedback onLongPress={() => this.setProfilePictureModalVisible()} style={styles.touchableOpacity}>
-                <Image source={{ uri : this.state.urlAvatar}} style={styles.image} resizeMode="center"/>
+              <TouchableWithoutFeedback onLongPress={() => this.setProfilePictureModalVisible('addAvatar')} style={styles.touchableOpacity}>
+                <Image source={{ uri : this.state.avatar}} style={styles.image} resizeMode="center"/>
               </TouchableWithoutFeedback>
             </View>
           </View>
           <Modal
-            animationType="slide"
-            transparent={false}
-            visible={this.state.profilePictureModalVisible}
-            presentationStyle="formSheet"
-            onRequestClose={() => {
-              this.setState({
-                ...this.state,
-                profilePictureModalVisible: false
-              });
-            }}>
-            <View>
-              <Text style={styles.profilePictureModalTitle}>Modifier l'image de profil</Text>
-            </View>
-            <View style={{
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-              <TouchableOpacity style={styles.modalProfilePictureContainer} onPress={() => this.updateProfilePictureFromCamera()}>
-                <Ionicons name="md-camera" style={styles.modalProfilePictureIcons}></Ionicons>
-                <Text>Camera</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.modalProfilePictureContainer} onPress={() => this.updateProfileImageFromGallery()}>
-                <Ionicons name="md-image" style={styles.modalProfilePictureIcons}></Ionicons>
-                <Text>Gallerie</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.modalProfilePictureContainer} onPress={() => this.askPermissionsAsync()}>
-                <Ionicons name="md-image" style={styles.modalProfilePictureIcons}></Ionicons>
-                <Text>Permissions</Text>
-              </TouchableOpacity>
-            </View>
+              animationType="slide"
+              transparent={false}
+              visible={this.state.profilePictureModalVisible}
+              presentationStyle="formSheet"
+              onRequestClose={() => {
+                this.setState({
+                  ...this.state,
+                  profilePictureModalVisible: false
+                });
+              }}>
+            { this._renderModal() }
           </Modal>
 
           <Text style={styles.descriptionBloc}>{this.state.user.description}</Text>
@@ -245,6 +257,10 @@ class ProfilScreen extends Component {
               <Text style={[styles.text, { fontSize: 24 }]}>{countElement(this.state.user.following)}</Text>
               <Text style={[styles.text, styles.subText]}>Following</Text>
             </View>
+          </View>
+
+          <View>
+            { this._renderButton() }
           </View>
 
           <SafeAreaView style={styles.imageList}>
@@ -493,15 +509,37 @@ const styles = StyleSheet.create({
   profilePictureModalTitle: {
     textAlign: "center",
     fontSize: 30
+  },
+  avatarPlaceholder: {
+    width: 100,
+    height: 100,
+    backgroundColor: "#E1E2E6",
+    borderRadius: 50,
+    marginTop: 15,
+    marginBottom: 15,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  avatar: {
+    position: "absolute",
+    width: 100,
+    height: 100,
+    borderRadius: 50
+  },
+  btnAdd : {
+    margin: 10,
+    marginTop: 30
   }
 });
 
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
-    userId: state.auth.userId
+    userId: state.auth.userId,
+    loading: state.auth.loading,
+    addPhoto: state.auth.addPhoto,
   }
 }
 
-export default connect(mapStateToProps, {})(ProfilScreen)
+export default connect(mapStateToProps, { UpdateProfil, addPhoto })(ProfilScreen)
 

@@ -5,6 +5,49 @@ import {AsyncStorage} from 'react-native';
 import { Platform } from "react-native";
 
 export default {
+    addPhoto : async function(avatar, id) {
+        let token = await this.getToken();
+
+        const data = new FormData();
+        data.append('token', token);
+        data.append('storage', 'addPhoto');
+        data.append('fileData', {
+            uri : Platform.OS === "android" ? avatar.uri : avatar.uri.replace("file://", ""),
+            type: Platform.OS === "android" ? 'image/jpeg' : avatar.type,
+            name: id,
+        });
+
+        const res = await axios.post(burl + '/addPhoto',data,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Accept': 'application/json',
+            },
+        });
+
+        return res.status === 200 ? res : false;
+    },
+    UpdateProfil : async function(avatar, id) {
+        let token = await this.getToken();
+
+        const data = new FormData();
+        data.append('token', token);
+        data.append('storage', 'updateprofil');
+        data.append('fileData', {
+            uri : Platform.OS === "android" ? avatar.uri : avatar.uri.replace("file://", ""),
+            type: Platform.OS === "android" ? 'image/jpeg' : avatar.type,
+            name: id,
+        });
+
+        const res = await axios.post(burl + '/UpdateProfil',data,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Accept': 'application/json',
+            },
+        });
+
+        return res.status === 200 ? res : false;
+
+    },
     InitializeUser : async function(lastname ,firstname, description, avatar, id) {
         let token = await this.getToken();
 
