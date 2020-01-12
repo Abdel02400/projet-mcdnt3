@@ -15,7 +15,10 @@ import {
     UPDATEPROFIL_SUCCESS,
     ADDPHOTO_ATTEMPT,
     ADDPHOTO_FAILED,
-    ADDPHOTO_SUCCESS
+    ADDPHOTO_SUCCESS,
+    GETFEED_ATTEMPT,
+    GETFEED_FAILED,
+    GETFEED_SUCCESS
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -24,8 +27,10 @@ const INITIAL_STATE = {
     loading: false,
     isLogged: false,
     error: '',
+    feed: null,
     initializeUser: false,
     isaddPhoto: false,
+    isFeed: false
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -58,7 +63,7 @@ export default (state = INITIAL_STATE, action) => {
         case ADDPHOTO_FAILED:
         case UPDATEPROFIL_FAILED:
             return {
-                ...this.state,
+                ...state,
                 loading: false,
                 error: action.error,
                 isLogged: false,
@@ -88,6 +93,17 @@ export default (state = INITIAL_STATE, action) => {
                 isaddPhoto: true,
                 user: action.user
             };
+        case GETFEED_SUCCESS: 
+            return {
+                ...state,
+                feed: action.feed,
+                isFeed: true
+            }
+        case GETFEED_FAILED:
+            return {
+                ...state,
+                isFeed: false
+            }
         case INITIALIZEUSER_SUCCESS:
             return {
                 ...state,

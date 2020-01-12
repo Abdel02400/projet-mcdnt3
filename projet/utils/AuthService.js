@@ -1,6 +1,6 @@
 import axios from 'axios';
 const headers = {'Content-Type': 'application/json'};
-const burl = "http://172.20.10.2:8000";
+const burl = "http://192.168.1.16:8000";
 import {AsyncStorage} from 'react-native';
 import { Platform } from "react-native";
 
@@ -100,6 +100,13 @@ export default {
             headers: headers
         })
         if(res.status === 200) return res.data;
+        else return false;
+    },
+    getFeed: async function(){
+        const res = await axios.get(burl + '/getfeed',{
+            headers: headers
+        })
+        if(res.status === 200) {return res.data}
         else return false;
     },
     loggedIn: async function(){

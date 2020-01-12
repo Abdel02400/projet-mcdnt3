@@ -15,3 +15,6 @@ export const UPDATEPROFIL_FAILED = 'updateprofil_failed';
 export const ADDPHOTO_ATTEMPT = 'addphoto_attempt';
 export const ADDPHOTO_SUCCESS = 'addphoto_success';
 export const ADDPHOTO_FAILED = 'addphoto_failed';
+export const GETFEED_ATTEMPT = 'feedpost_attempt';
+export const GETFEED_SUCCESS = 'feedpost_success';
+export const GETFEED_FAILED = 'feedpost_failed';

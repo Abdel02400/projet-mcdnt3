@@ -18,18 +18,17 @@ import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
 import { Ionicons } from "@expo/vector-icons";
 import AuthService from "../../utils/AuthService";
 import { connect } from "react-redux";
+import { GetFeed } from "../../actions";
+import ButtonField from '../../components/ButtonField';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 // A REMPLACER AVEC CONTENU BASE DE DONNEES
-const Posts = [
-    { id: "1", uri: require('../../assets/images/1.jpg') },
-    { id: "2", uri: require('../../assets/images/2.jpg') },
-    { id: "3", uri: require('../../assets/images/3.jpg') },
-    { id: "4", uri: require('../../assets/images/4.jpg') },
-    { id: "5", uri: require('../../assets/images/5.jpg') },
+let Posts = [
 ]
+
+
 
 class ActualityScreen extends Component {
 
@@ -37,11 +36,10 @@ class ActualityScreen extends Component {
         super(props);
         this._logout = this._logout.bind(this);
         this.renderPosts = this.renderPosts.bind(this);
-        //    this.likeHandling = this.likeHandling.bind(this);
-        //   this.likeNbHandling = this.likeNbHandling.bind(this);
         this.state = {
             user: null,
             currentIndex: 0,
+            postLoaded: false,
             post: {
                 likes: {
                     liked: false,
@@ -51,10 +49,10 @@ class ActualityScreen extends Component {
                 comments: {
                     commentNb: 1500
                 }
-            }
+            },
+            feed: []
         };
         this.renderPosts = this.renderPosts.bind(this);
-        // SWIPE CARDS
         this.position = new Animated.ValueXY();
         this.rotate = this.position.x.interpolate({
             inputRange: [-SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2],
@@ -165,6 +163,8 @@ class ActualityScreen extends Component {
             ...this.state,
             user: this.props.user,
         });
+
+        this._getFeed();
     }
 
 
@@ -179,30 +179,31 @@ class ActualityScreen extends Component {
         }
     }
 
-    toggleLike = () => {
-        this.setState((state) => {
-            return {
-                post: {
-                    likes: {
-                        liked: !state.post.likes.liked,
-                        likeNb: state.post.likes.likeNb + 1
-                    },
-                    comments: {
-                        commentNb: state.post.comments.commentNb
-                    }
-                }
-            }
-        });
+    toggleLike = (itemID) => {
+        // Récupérer l'id du post avec itemID
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (nextProps.feed) {
+            Posts = nextProps.feed;
+            this.setState({
+                ...this.state,
+                postLoaded: true
+            })
+        }
+    }
+
+    _getFeed = () => {
+
+        this.props.GetFeed();
     }
 
 
 
     // Fonction de rendu des cards
     renderPosts = () => {
-
         return Posts.map((item, i) => {
-
-
+            item.id = i + 1;
             if (i < this.state.currentIndex) {
                 return null
             }
@@ -224,22 +225,20 @@ class ActualityScreen extends Component {
                             <Text style={{ color: 'black', textDecorationLine: "underline", fontSize: 25, fontWeight: '400', padding: 10, textAlign: "center" }}>Artist Name</Text>
                         </Animated.View>
 
-                        <Animated.View style={{ height: "80%", marginBottom: "2%"}}>
+                        <Animated.View style={{ height: "80%", marginBottom: "2%" }}>
                             <Image
-                                style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 15}}
-                                source={item.uri} />
+                                style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 15 }}
+                                source={{ uri: "http://192.168.1.16:8000/" + item.url }} />
                         </Animated.View>
-
-
 
                         <Animated.View style={{ height: "15%", width: "100%", backgroundColor: "transparent", flex: 1, flexDirection: "column" }}>
                             <Animated.View style={{ flex: 1, flexDirection: "row", height: "50%", justifyContent: "space-between" }}>
                                 {/* BLOC LIKES */}
                                 <Animated.View style={{ flex: 1 }}>
-                                    <TouchableWithoutFeedback style={{}} onPress={() => this.toggleLike()}>
+                                    <TouchableWithoutFeedback style={{}} onPress={() => this.toggleLike(item.id)}>
                                         <Animated.View style={{ flexDirection: "row" }}>
                                             <Ionicons name={this.state.post.likes.liked ? "md-heart" : "md-heart-empty"} style={{ fontSize: 30 }}></Ionicons>
-                                            <Text style={{ fontSize: 30 }}>{this.state.post.likes.likeNb >= 1000 ? Math.floor(this.state.post.likes.likeNb / 1000) + "K" : this.state.post.likes.likeNb}</Text>
+                                            <Text style={{ fontSize: 30 }}>{item.likes.length >= 1000 ? Math.floor(item.likes.length / 1000) + "K" : item.likes.length}</Text>
                                         </Animated.View>
                                     </TouchableWithoutFeedback>
                                 </Animated.View>
@@ -247,18 +246,14 @@ class ActualityScreen extends Component {
                                 {/* BLOC COMMENTS */}
                                 <Animated.View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
                                     <Ionicons name="md-text" style={{ fontSize: 50 }}></Ionicons>
-                                    <Text style={{ fontSize: 30 }}>{this.state.post.comments.commentNb >= 1000 ? Math.floor(this.state.post.comments.commentNb / 1000) + "K" : this.state.post.comments.commentNb}</Text>
+                                    <Text style={{ fontSize: 30 }}>{item.comments.length >= 1000 ? Math.floor(item.comments.length / 1000) + "K" : item.comments.length}</Text>
                                 </Animated.View>
                                 {/* FIN BLOC COMMENTS */}
                             </Animated.View>
 
 
-                            <Animated.View style={{flexDirection: "row", flex: 1, height: "50%", marginTop:"2%", justifyContent:"center"}}>
-                                <Text style={styles.tags}>Dotwork</Text>
-                                <Text style={styles.tags}>  |  </Text>
-                                <Text style={styles.tags}>Tribal</Text>
-                                <Text style={styles.tags}>  |  </Text>
-                                <Text style={styles.tags}>Neotrad</Text>
+                            <Animated.View style={{ flexDirection: "row", flex: 1, height: "50%", marginTop: "2%", justifyContent: "center" }}>
+
                             </Animated.View>
 
 
@@ -292,19 +287,17 @@ class ActualityScreen extends Component {
                         <Animated.View style={{ height: "80%" }}>
                             <Image
                                 style={{ flex: 1, height: null, width: null, resizeMode: 'cover' }}
-                                source={item.uri} />
+                                source={{ uri: "http://192.168.1.16:8000/" + item.url }} />
                         </Animated.View>
-
-
 
                         <Animated.View style={{ height: "15%", width: "100%", backgroundColor: "transparent", flex: 1, flexDirection: "column" }}>
                             <Animated.View style={{ flex: 1, flexDirection: "row", height: "50%", justifyContent: "space-between" }}>
                                 {/* BLOC LIKES */}
-                                <Animated.View style={{ flex: 1}}>
-                                    <TouchableWithoutFeedback style={{}} onPress={() => this.toggleLike()}>
+                                <Animated.View style={{ flex: 1 }}>
+                                    <TouchableWithoutFeedback style={{}} onPress={() => this.toggleLike(item.id)}>
                                         <Animated.View style={{ flexDirection: "row" }}>
                                             <Ionicons name={this.state.post.likes.liked ? "md-heart" : "md-heart-empty"} style={{ fontSize: 30 }}></Ionicons>
-                                            <Text style={{ fontSize: 30 }}>{this.state.post.likes.likeNb >= 1000 ? Math.floor(this.state.post.likes.likeNb / 1000) + "K" : this.state.post.likes.likeNb}</Text>
+                                            <Text style={{ fontSize: 30 }}>{item.likes.length >= 1000 ? Math.floor(item.likes.length / 1000) + "K" : item.likes.length}</Text>
                                         </Animated.View>
                                     </TouchableWithoutFeedback>
                                 </Animated.View>
@@ -312,17 +305,12 @@ class ActualityScreen extends Component {
                                 {/* BLOC COMMENTS */}
                                 <Animated.View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
                                     <Ionicons name="md-text" style={{ fontSize: 50 }}></Ionicons>
-                                    <Text style={{ fontSize: 30 }}>{this.state.post.comments.commentNb >= 1000 ? Math.floor(this.state.post.comments.commentNb / 1000) + "K" : this.state.post.comments.commentNb}</Text>
+                                    <Text style={{ fontSize: 30 }}>{item.comments.length >= 1000 ? Math.floor(item.comments.length / 1000) + "K" : item.comments.length}</Text>
                                 </Animated.View>
                                 {/* FIN BLOC COMMENTS */}
                             </Animated.View>
 
-                            <Animated.View style={{flexDirection: "row", flex: 1, height: "50%", justifyContent:"center"}}>
-                                <Text style={styles.tags}>Dotwork</Text>
-                                <Text style={styles.tags}> | </Text>
-                                <Text style={styles.tags}>Tribal</Text>
-                                <Text style={styles.tags}> | </Text>
-                                <Text style={styles.tags}>Neotrad</Text>
+                            <Animated.View style={{ flexDirection: "row", flex: 1, height: "50%", justifyContent: "center" }}>
                             </Animated.View>
                         </Animated.View>
 
@@ -343,13 +331,23 @@ class ActualityScreen extends Component {
     };
 
     render() {
-        return (
-            <View style={{ flex: 1 }}>
+        if (this.state.postLoaded) {
+            console.log("SUCCESS : " + Posts);
+            return (
                 <View style={{ flex: 1 }}>
-                    {this.renderPosts()}
+                    <View style={{ flex: 1 }}>
+                        {this.renderPosts()}
+                    </View>
                 </View>
-            </View>
-        );
+            );
+        }
+        else {
+            return (
+                <View>
+                    <Text>Loading ...</Text>
+                </View>
+            )
+        }
     }
 }
 
@@ -421,7 +419,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         user: state.auth.user,
+        feed: state.auth.feed
     }
 }
 
-export default connect(mapStateToProps, {})(ActualityScreen)
+export default connect(mapStateToProps, { GetFeed })(ActualityScreen)
