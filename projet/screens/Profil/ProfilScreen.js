@@ -18,9 +18,10 @@ import { countElement } from "../../utils/GlobalSettings";
 import { Spinner } from "../../components/Spinner";
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import {UpdateProfil} from "../../actions";
-import {addPhoto} from "../../actions";
+import { UpdateProfil } from "../../actions";
+import { addPhoto } from "../../actions";
 import ButtonField from "../../components/ButtonField";
+import { Ionicons } from "@expo/vector-icons";
 
 class ProfilScreen extends Component {
   constructor(props) {
@@ -58,7 +59,6 @@ class ProfilScreen extends Component {
 
   componentWillMount() {
     this.props.navigation.setParams({ logout: this._logout });
-    alert(this.props.user.posts)
     let avatar = "http://172.20.10.2:8000/" + this.props.userId + "-" + this.props.user.avatar;
     this.setState({
       ...this.state,
@@ -72,21 +72,14 @@ class ProfilScreen extends Component {
   }
 
   async componentWillReceiveProps(nextProps, nextContext) {
-    if(nextProps.isaddPhoto) await this.setProfilePictureModalNotVisible();
+
+    if (nextProps.isaddPhoto && nextProps.user.posts) await this.setProfilePictureModalNotVisible();
     this.setState({
       ...this.state,
       user: nextProps.user,
       images: nextProps.user.posts
     });
   }
-
-  /*askPermissionsAsync = async () => {
-    const {status: cameraPermission} = await Permissions.askAsync(Permissions.CAMERA);
-    const {status: cameraRollPermission} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    // you would probably do something to verify that permissions
-    // are actually granted, but I'm skipping that for brevity
-    alert("Permissions demandées");
-  };*/
 
   async updateProfileImageFromGallery() {
 
@@ -103,7 +96,7 @@ class ProfilScreen extends Component {
       })
     }
 
-    if(this.state.add === 'addAvatar'){
+    if (this.state.add === 'addAvatar') {
       this.setState({
         ...this.state,
         avatar: result.uri,
@@ -111,7 +104,7 @@ class ProfilScreen extends Component {
     }
 
 
-    if(this.state.add === 'addAvatar') this.props.UpdateProfil(result, this.state.userId);
+    if (this.state.add === 'addAvatar') this.props.UpdateProfil(result, this.state.userId);
     else this.props.addPhoto(result, this.state.userId);
 
   }
@@ -131,19 +124,20 @@ class ProfilScreen extends Component {
       return;
     }
 
-    if(this.state.add === 'addAvatar'){
+    if (this.state.add === 'addAvatar') {
       this.setState({
         ...this.state,
         avatar: result.uri,
       });
     }
 
-    if(this.state.add === 'addAvatar') this.props.UpdateProfil(result, this.state.userId);
+    if (this.state.add === 'addAvatar') this.props.UpdateProfil(result, this.state.userId);
     else this.props.addPhoto(result, this.state.userId);
   }
 
   setProfilePictureModalVisible(add) {
-    this.setState({ ...this.state,
+    this.setState({
+      ...this.state,
       profilePictureModalVisible: true,
       add: add
     });
@@ -159,40 +153,63 @@ class ProfilScreen extends Component {
   }
 
   _renderModal() {
-    if (this.props.loading){
-      return <Spinner/>
+    if (this.props.loading) {
+      return <Spinner />
     }
     return (
+      <View style={{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        marginTop: "75%",
+      }}>
         <View style={{
           flex: 1,
           flexDirection: 'column',
-          justifyContent: 'space-around',
           alignItems: 'center',
-          marginTop: 20,
+          marginBottom: 15
         }}>
-          <Text>Mes photo :</Text>
-          <TouchableOpacity onPress={() => this.updateProfilePictureFromCamera()}>
-            <Text>Camera</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.updateProfileImageFromGallery()}>
-            <Text>Gallerie</Text>
-          </TouchableOpacity>
+          <Ionicons name="md-camera" style={{ fontSize: 50 }}></Ionicons>
+          <ButtonField
+            titleText="Prendre une photo"
+            titleTextSize={15}
+            textColor={'white'}
+            buttonColor={'black'}
+            onPress={() => this.updateProfilePictureFromCamera()}
+          />
         </View>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+          <Ionicons name="md-image" style={{ fontSize: 50 }}></Ionicons>
+          <ButtonField
+            titleText="Séléctionner une photo"
+            titleTextSize={15}
+            textColor={'white'}
+            buttonColor={'black'}
+            onPress={() => this.updateProfileImageFromGallery()}
+          />
+        </View>
+
+      </View>
     )
   }
 
   _renderButton() {
-    if(this.props.loading) return <Spinner />
+    if (this.props.loading) return <Spinner />
     return (
-        <View style={styles.btnAdd}>
-          <ButtonField
-              titleText="ajouter une photo"
-              titleTextSize={15}
-              textColor={'black'}
-              buttonColor={'white'}
-              onPress={() => this.setProfilePictureModalVisible('addPhoto')}
-          />
-        </View>
+      <View style={styles.btnAdd}>
+        <ButtonField
+          titleText="Ajouter une Photo"
+          titleTextSize={15}
+          textColor={'white'}
+          buttonColor={'black'}
+          onPress={() => this.setProfilePictureModalVisible('addPhoto')}
+        />
+      </View>
     )
   }
 
@@ -207,32 +224,33 @@ class ProfilScreen extends Component {
       <SafeAreaView style={styles.container}>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ alignItems: "center", marginTop: 5 }}>
+          <View style={{ alignItems: "center", flex: 1 }}>
             <View style={styles.profileImage}>
-              <TouchableWithoutFeedback onLongPress={() => this.setProfilePictureModalVisible('addAvatar')} style={styles.touchableOpacity}>
-                <Image source={{ uri : this.state.avatar}} style={styles.image} resizeMode="center"/>
+              <TouchableWithoutFeedback onLongPress={() => this.setProfilePictureModalVisible('addPhoto')} style={styles.touchableOpacity}>
+                <Image source={{ uri: this.state.avatar }} style={styles.image} resizeMode="center" />
               </TouchableWithoutFeedback>
             </View>
           </View>
           <Modal
-              animationType="slide"
-              transparent={false}
-              visible={this.state.profilePictureModalVisible}
-              presentationStyle="formSheet"
-              onRequestClose={() => {
-                this.setState({
-                  ...this.state,
-                  profilePictureModalVisible: false
-                });
-              }}>
-            { this._renderModal() }
+            animationType="slide"
+            transparent={false}
+            visible={this.state.profilePictureModalVisible}
+            presentationStyle="formSheet"
+            onRequestClose={() => {
+              this.setState({
+                ...this.state,
+                profilePictureModalVisible: false
+              });
+            }}>
+            {this._renderModal()}
           </Modal>
 
-          <Text style={styles.descriptionBloc}>{this.state.user.description}</Text>
-
           <View style={styles.infoContainer}>
-            <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{this.state.user.firstname} {this.state.user.lastname}</Text>
-            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{this.state.user.role}</Text>
+            <Text style={[styles.textMiddle, { fontWeight: "200", fontSize: 36 }]}>{this.state.user.firstname} {this.state.user.lastname}</Text>
+            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{this.state.user.role == "tatoue" ? "Tatoué" : "Tatoueur"}</Text>
+          </View>
+          <View style={styles.descriptionBloc}>
+            <Text style={styles.textMiddle}>{this.state.user.description}</Text>
           </View>
 
           <View style={styles.statsContainer}>
@@ -251,7 +269,7 @@ class ProfilScreen extends Component {
           </View>
 
           <View>
-            { this._renderButton() }
+            {this._renderButton()}
           </View>
 
           <SafeAreaView style={styles.imageList}>
@@ -260,7 +278,7 @@ class ProfilScreen extends Component {
                 return (
                   <View>
                     <TouchableHighlight focusedOpacity={0} onPress={() => this._goToPost(item.id)}>
-                      <Image style={styles.imageListItem} source={{ uri : "http://172.20.10.2:8000/" + item.url }} />
+                      <Image style={styles.imageListItem} source={{ uri: "http://192.168.1.16:8000/" + item.url }} />
                     </TouchableHighlight>
                   </View>
                 )
@@ -268,36 +286,6 @@ class ProfilScreen extends Component {
               } />
             </ScrollView>
           </SafeAreaView>
-
-
-          {/* TODO : Itérer sur les photos en base de données utilisateur
-              TODO : Rendre les images cliquables - FAIT
-          <View style={{ marginTop: 32 }}>
-            <ScrollView horizontal={false} showsHorizontalScrollIndicator={true}>
-              <TouchableHighlight activeOpacity={0}  focusedOpacity={0} onPress={() => this._goToPost(1)} style={styles.mediaImageContainer}>
-                <Image source={require("../../assets/images/media1.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => this._goToPost(2)} style={styles.mediaImageContainer}>
-                <Image source={require("../../assets/images/media2.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => this._goToPost(3)} style={styles.mediaImageContainer}>
-                <Image source={require("../../assets/images/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => this._goToPost(4)} style={styles.mediaImageContainer}>
-                <Image source={require("../../assets/images/media4.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => this._goToPost(5)} style={styles.mediaImageContainer}>
-                <Image source={require("../../assets/images/media5.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => this._goToPost(6)} style={styles.mediaImageContainer}>
-                <Image source={require("../../assets/images/media6.jpg")} style={styles.image} resizeMode="cover"></Image>
-              </TouchableHighlight>
-            </ScrollView>
-                <View style={styles.mediaCount}>
-                  <Text style={[styles.text, { fontSize: 24, color: "#DFD8C8", fontWeight: "300" }]}>70</Text>
-                  <Text style={[styles.text, { fontSize: 12, color: "#DFD8C8", textTransform: "uppercase" }]}>Media</Text>
-            </View>
-          </View>*/}
         </ScrollView>
       </SafeAreaView>
     );
@@ -309,16 +297,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   descriptionBloc: {
-    margin: 5,
-    marginTop: 10,
     borderColor: 'black',
-    borderWidth: 1,
-    height: 50,
-    textAlign: 'center'
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    marginTop: 10,
+    width: "90%",
+    marginLeft: "5%"
+  },
+  textMiddle: {
+    textAlign: 'center',
+    color: "black"
   },
   imageList: {
     flex: 1,
-    backgroundColor: '#F3F3F3',
     marginTop: 10,
   },
   imageListItem: {
@@ -394,7 +385,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     alignSelf: "center",
     alignItems: "center",
-    marginTop: 16
+    marginBottom: 10
   },
   statsContainer: {
     flexDirection: "row",
@@ -517,9 +508,11 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50
   },
-  btnAdd : {
-    margin: 10,
-    marginTop: 30
+  btnAdd: {
+    marginLeft: "7%",
+    marginTop: 20,
+    marginBottom: 10,
+    flex: 1
   }
 });
 
