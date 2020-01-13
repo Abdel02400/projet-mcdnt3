@@ -3,12 +3,31 @@
   <component name="ChangeListManager">
     <list default="true" id="bcacdc26-5499-47c4-a1e6-82d517231410" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projet/actions/GetPhotoActions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/projet/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/actions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projet/actions/types.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/actions/types.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projet/reducers/AuthReducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/reducers/AuthReducers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578596704047.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578596739011.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578597769617.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578598105853.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578598177549.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578598254082.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578598396879.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578598427551.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578598561556.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578598988958.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599036325.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599109915.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599127559.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599207934.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599321027.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599368831.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599401913.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599479010.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599515066.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599681966.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599714515.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599723514.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-1578599752048.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/5e1779474c8e8919a8397cc7-avatar.jpeg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/user.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,8 +40,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="74" selection-start-line="74" selection-end-line="74" />
+            <state relative-caret-position="223">
+              <caret line="60" column="31" selection-start-line="60" selection-start-column="31" selection-end-line="60" selection-end-column="31" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -33,8 +52,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/projet/reducers/AuthReducers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="48" column="26" lean-forward="true" selection-start-line="48" selection-start-column="26" selection-end-line="48" selection-end-column="26" />
+            <state relative-caret-position="-306">
+              <caret line="48" column="26" selection-start-line="48" selection-start-column="26" selection-end-line="48" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/projet/utils/GlobalSettings.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -81,7 +109,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/user.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="314">
+            <state relative-caret-position="2652">
               <caret line="156" column="53" selection-start-line="156" selection-start-column="53" selection-end-line="156" selection-end-column="53" />
             </state>
           </provider>
@@ -202,13 +230,13 @@
               <item name="projet-mcdnt3" type="b2602c69:ProjectViewProjectNode" />
               <item name="projet-mcdnt3" type="462c0819:PsiDirectoryNode" />
               <item name="projet" type="462c0819:PsiDirectoryNode" />
-              <item name="actions" type="462c0819:PsiDirectoryNode" />
+              <item name="reducers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="projet-mcdnt3" type="b2602c69:ProjectViewProjectNode" />
               <item name="projet-mcdnt3" type="462c0819:PsiDirectoryNode" />
               <item name="projet" type="462c0819:PsiDirectoryNode" />
-              <item name="reducers" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -219,7 +247,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../react-native" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -393,18 +421,20 @@
       <workItem from="1578589658873" duration="1997000" />
       <workItem from="1578595634329" duration="1787000" />
       <workItem from="1578597440489" duration="1792000" />
-      <workItem from="1578599255702" duration="474000" />
+      <workItem from="1578599255702" duration="1045000" />
+      <workItem from="1578605476837" duration="119000" />
+      <workItem from="1578911342044" duration="626000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="246554000" />
+    <option name="totallyTimeSpent" value="247870000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.33378017" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.34316355" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -420,7 +450,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="TypeScript" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="12" visible="true" weight="0.3437058" />
+      <window_info anchor="bottom" id="Terminal" order="12" visible="true" weight="0.3437058" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -631,13 +661,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/projet/utils/GlobalSettings.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/projet/screens/AuthLoadingScreen.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
@@ -770,22 +793,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/user.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
+        <state relative-caret-position="2652">
           <caret line="156" column="53" selection-start-line="156" selection-start-column="53" selection-end-line="156" selection-end-column="53" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/projet/reducers/AuthReducers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="48" column="26" lean-forward="true" selection-start-line="48" selection-start-column="26" selection-end-line="48" selection-end-column="26" />
+        <state relative-caret-position="-306">
+          <caret line="48" column="26" selection-start-line="48" selection-start-column="26" selection-end-line="48" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/projet/utils/GlobalSettings.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/projet/screens/Profil/ProfilScreen.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="74" selection-start-line="74" selection-end-line="74" />
+        <state relative-caret-position="223">
+          <caret line="60" column="31" selection-start-line="60" selection-start-column="31" selection-end-line="60" selection-end-column="31" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>

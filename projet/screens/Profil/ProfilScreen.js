@@ -58,6 +58,7 @@ class ProfilScreen extends Component {
 
   componentWillMount() {
     this.props.navigation.setParams({ logout: this._logout });
+    alert(this.props.user.posts)
     let avatar = "http://172.20.10.2:8000/" + this.props.userId + "-" + this.props.user.avatar;
     this.setState({
       ...this.state,
