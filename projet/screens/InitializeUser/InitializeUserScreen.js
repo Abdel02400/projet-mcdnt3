@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import {Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+    Image,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import InputField from "../../components/InputField";
 import ButtonField from "../../components/ButtonField";
 import { Ionicons } from "@expo/vector-icons";
@@ -124,6 +133,52 @@ class InitializeUserScreen extends Component {
 
     };
 
+    _renderModal() {
+        if (this.props.loading) {
+            return <Spinner />
+        }
+        return (
+            <View style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                marginTop: 50
+            }}>
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    marginBottom: 15
+                }}>
+                    <Ionicons name="md-camera" style={{ fontSize: 50 }} />
+                    <ButtonField
+                        titleText="Prendre une photo"
+                        titleTextSize={15}
+                        textColor={'white'}
+                        buttonColor={'black'}
+                        onPress={() => this.updateProfilePictureFromCamera()}
+                    />
+                </View>
+                <View style={{
+                    flex: 1,
+                    flexDirection: 'column',
+                    alignItems: 'center'
+                }}>
+                    <Ionicons name="md-image" style={{ fontSize: 50 }} />
+                    <ButtonField
+                        titleText="Séléctionner une photo"
+                        titleTextSize={15}
+                        textColor={'white'}
+                        buttonColor={'black'}
+                        onPress={() => this.updateProfileImageFromGallery()}
+                    />
+                </View>
+            </View>
+        )
+    }
+
+
     _renderButton() {
         if(this.props.loading) return <Spinner />
         return (
@@ -139,125 +194,136 @@ class InitializeUserScreen extends Component {
 
     render() {
         return (
-            <View style={styles.form}>
-                <InputField
-                    labelText="Mon nom"
-                    labelTextSize={14}
-                    labelColor={'black'}
-                    textColor={'black'}
-                    borderBottomColor={'black'}
-                    inputType="text"
-                    customStyle={{marginBottom:30}}
-                    onChangeText={ (lastname) => this.onChangeTextInput('lastname', lastname) }
-                />
-                <InputField
-                    labelText="Mon prenom"
-                    labelTextSize={14}
-                    labelColor={'black'}
-                    textColor={'black'}
-                    borderBottomColor={'black'}
-                    inputType="text"
-                    customStyle={{marginBottom:30}}
-                    onChangeText={ (firstname) => this.onChangeTextInput('firstname', firstname) }
-                />
-                <Text>Ma photo de profil</Text>
-                <View style={{alignItems: "center", width: "100%" }}>
-                    <TouchableOpacity style={styles.avatarPlaceholder} onPress={this.handlePickAvatar}>
-                        <Image source={{ uri: this.state.avatar.uri }} style={styles.avatar} />
-                        {this.state.iconisvisible &&
+                <ScrollView style={styles.form} keyboardShouldPersistTaps='never' showsVerticalScrollIndicator={false}>
+                    <View style={styles.title}>
+                        <Text style={styles.titleText}>
+                            Mes informations
+                        </Text>
+                    </View>
+                    <InputField
+                        labelText="Mon nom"
+                        labelTextSize={14}
+                        labelColor={'black'}
+                        textColor={'black'}
+                        borderBottomColor={'black'}
+                        inputType="text"
+                        customStyle={{marginBottom:30}}
+                        onChangeText={ (lastname) => this.onChangeTextInput('lastname', lastname) }
+                    />
+                    <InputField
+                        labelText="Mon prenom"
+                        labelTextSize={14}
+                        labelColor={'black'}
+                        textColor={'black'}
+                        borderBottomColor={'black'}
+                        inputType="text"
+                        customStyle={{marginBottom:30}}
+                        onChangeText={ (firstname) => this.onChangeTextInput('firstname', firstname) }
+                    />
+                    <View style={styles.title}>
+                        <Text style={styles.titleText}>
+                            Ma photo de profil
+                        </Text>
+                    </View>
+                    <View style={{alignItems: "center", width: "100%" }}>
+                        <TouchableOpacity style={styles.avatarPlaceholder} onPress={this.handlePickAvatar}>
+                            <Image source={{ uri: this.state.avatar.uri }} style={styles.avatar} />
+                            {this.state.iconisvisible &&
                             <Ionicons
                                 name="ios-add"
                                 size={40}
                                 color="#FFF"
                                 style={{marginTop: 6, marginLeft: 2}}
                             />
-                        }
-                    </TouchableOpacity>
-                </View>
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={this.state.profilePictureModalVisible}
-                    presentationStyle="formSheet"
-                    onRequestClose={() => {
-                        this.setState({
-                            ...this.state,
-                            profilePictureModalVisible: false
-                        });
-                    }}>
-                    <View style={{
-                        flex: 1,
-                        flexDirection: 'column',
-                        justifyContent: 'space-around',
-                        alignItems: 'center',
-                        marginTop: 20,
-                    }}>
-                        <Text>Mes photo :</Text>
-                        <TouchableOpacity onPress={() => this.updateProfilePictureFromCamera()}>
-                            <Text>Camera</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.updateProfileImageFromGallery()}>
-                            <Text>Gallerie</Text>
+                            }
                         </TouchableOpacity>
                     </View>
-                </Modal>
-                <Text>Description</Text>
-                <View style={styles.textAreaContainer} >
-                    <TextInput
-                        style={styles.textArea}
-                        underlineColorAndroid="transparent"
-                        placeholder="Decrivez-vous"
-                        placeholderTextColor="grey"
-                        numberOfLines={10}
-                        multiline={true}
-                        onChangeText={ (description) => this.onChangeTextInput('description', description) }
-                    />
-                </View>
-                { this._renderButton() }
-                {this.state.formNotComplete ?
-                    <Text style={styles.formNotComplete}>Merci de remplir tout les champs</Text> : null
-                }
-                <Text>{this.state.resServer}</Text>
-            </View>
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.profilePictureModalVisible}
+                        presentationStyle="formSheet"
+                        onRequestClose={() => {
+                            this.setState({
+                                ...this.state,
+                                profilePictureModalVisible: false
+                            });
+                        }}>
+                        {this._renderModal()}
+                    </Modal>
+                    <View style={styles.title}>
+                        <Text style={styles.titleText}>
+                            Ma description
+                        </Text>
+                    </View>
+                    <View style={styles.textAreaContainer} >
+                        <TextInput
+                            style={styles.textArea}
+                            underlineColorAndroid="transparent"
+                            placeholder="Decrivez-vous"
+                            placeholderTextColor="grey"
+                            numberOfLines={10}
+                            multiline={true}
+                            onChangeText={ (description) => this.onChangeTextInput('description', description) }
+                        />
+                    </View>
+                    {this.state.formNotComplete ?
+                        <Text style={styles.formNotComplete}>Merci de remplir tout les champs</Text> : null
+                    }
+                    { this._renderButton() }
+                    <Text>{this.state.resServer}</Text>
+                </ScrollView>
         );
     }
 }
 
 const styles = StyleSheet.create({
     form: {
-        flex:4,
-        margin: 20,
+        flex:1,
+        margin: 10,
+        marginTop: 30,
     },
     formNotComplete: {
         color: 'red',
         fontSize: 20,
         marginTop: 2,
+        marginBottom: 20,
     },
     avatarPlaceholder: {
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 150,
         backgroundColor: "#E1E2E6",
-        borderRadius: 50,
-        marginTop: 15,
-        marginBottom: 15,
+        borderRadius: 100,
+        marginBottom: 25,
         justifyContent: "center",
         alignItems: "center"
     },
     avatar: {
         position: "absolute",
-        width: 100,
-        height: 100,
-        borderRadius: 50
+        width: 150,
+        height: 150,
+        borderRadius: 75,
     },
     textAreaContainer: {
         borderColor: 'grey',
         borderWidth: 1,
         padding: 5,
-        marginBottom: 15
+        marginBottom: 25
     },
     textArea: {
         height: 150,
         justifyContent: "flex-start"
+    },
+    title: {
+        height: 50,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 40
+    },
+    titleText: {
+        fontSize: 30,
+        fontFamily: 'Cochin',
     }
 });
 

@@ -5,26 +5,32 @@ import ButtonField from "../../../components/ButtonField";
 import {connect} from "react-redux";
 import {SignUpUser} from "../../../actions";
 import {Spinner} from "../../../components/Spinner";
+import {testEmail} from "../../../utils/GlobalSettings";
 
 class SignUpScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            role: 'tatoue',
+            role: 'tatoué',
             email: '',
             password: '',
             formNotComplete: false,
-            resServer: ''
+            resServer: '',
+            validate: 'Merci de remplir tout les champs'
         };
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if(nextProps.isLogged){
+        this.__redirect(nextProps);
+    }
+
+    __redirect(props = this.props) {
+        if(props.isLogged){
             this.props.navigation.navigate('InitializeUser');
-        } else if(nextProps.error) {
+        } else if(props.error) {
             this.setState({
                 ...this.state,
-                error: nextProps.error
+                error: props.error
             })
         }
     }
@@ -35,9 +41,17 @@ class SignUpScreen extends Component {
         if(email === '' || password === ''){ //a faire (validator de formulaire)
             this.setState({
                 ...this.state,
-                formNotComplete : true
+                formNotComplete : true,
+                validate: 'Merci de remplir tout les champs'
             });
-        }else {
+        }else if (!testEmail(email)){
+            this.setState({
+                ...this.state,
+                formNotComplete: true,
+                validate: 'Email au format invalide'
+            });
+        }
+        else {
             this.props.SignUpUser({ email, password, role });
         }
     }
@@ -52,7 +66,7 @@ class SignUpScreen extends Component {
     }
 
     _renderButton() {
-        if(this.props.loading) return <Spinner />
+        if(this.props.loading) return <Spinner />;
         return (
             <ButtonField
                 titleText="S'inscrire"
@@ -99,7 +113,7 @@ class SignUpScreen extends Component {
                 </Picker>
                 { this._renderButton() }
                 {this.state.formNotComplete ?
-                    <Text style={styles.formNotComplete}>Merci de remplir tout les champs</Text> : null
+                    <Text style={styles.formNotComplete}>{this.state.validate}</Text> : null
                 }
                 <Text>{this.state.resServer}</Text>
             </View>

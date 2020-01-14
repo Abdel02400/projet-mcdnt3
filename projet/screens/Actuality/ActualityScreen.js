@@ -3,15 +3,11 @@ import {
     Image,
     StyleSheet,
     View,
-    SafeAreaView,
-    ScrollView,
     Text,
     Dimensions,
     Animated,
     PanResponder,
-    TouchableHighlight,
     TouchableWithoutFeedback,
-    TouchableOpacity
 } from 'react-native';
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
@@ -228,7 +224,7 @@ class ActualityScreen extends Component {
                         <Animated.View style={{ height: "80%", marginBottom: "2%" }}>
                             <Image
                                 style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 15 }}
-                                source={{ uri: "http://192.168.1.16:8000/" + item.url }} />
+                                source={{ uri: "http://172.20.10.2:8000/" + item.url }} />
                         </Animated.View>
 
                         <Animated.View style={{ height: "15%", width: "100%", backgroundColor: "transparent", flex: 1, flexDirection: "column" }}>
@@ -287,7 +283,7 @@ class ActualityScreen extends Component {
                         <Animated.View style={{ height: "80%" }}>
                             <Image
                                 style={{ flex: 1, height: null, width: null, resizeMode: 'cover' }}
-                                source={{ uri: "http://192.168.1.16:8000/" + item.url }} />
+                                source={{ uri: "http://172.20.10.2:8000/" + item.url }} />
                         </Animated.View>
 
                         <Animated.View style={{ height: "15%", width: "100%", backgroundColor: "transparent", flex: 1, flexDirection: "column" }}>

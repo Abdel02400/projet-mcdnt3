@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet, Text,
+    StyleSheet,
+    Text,
     View,
+    Image,
+    SafeAreaView,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import SignInScreen from './SignIn/SignInScreen';
 import SignUpScreen from './SignUp/SignUpScreen';
@@ -41,29 +47,41 @@ export default class Login extends Component {
         else content = <SignInScreen navigation={this.props.navigation}/>
 
         return(
-            <View style={styles.wrapper}>
-                <View style={styles.login}>
-                    <Text
-                        style={
-                            this.state.signIn
-                                ? [styles.loginHeader,styles.loginHeaderActive]
-                                : styles.loginHeader
-                        }
-                        onPress={() => this.onPressLogin('signIn')}>Se connecter</Text>
-                    <Text
-                        style={
-                            this.state.signUp
-                                ? [styles.loginHeader,styles.loginHeaderActive]
-                                : styles.loginHeader
-                        }
-                        onPress={() => this.onPressLogin('signUp')}>S'inscrire</Text>
-                </View>
-                { content }
-            </View>
+            <KeyboardAvoidingView  style={styles.container} behavior={Platform.OS === 'ios' ? 'position' : undefined}>
+                <SafeAreaView>
+                        <ScrollView>
+                            <View style={styles.wrapper}>
+                                <View style={{height: 250, backgroundColor: "black", justifyContent: 'center', alignItems: 'center',}}>
+                                    <Image source={require('../../assets/images/logo.png')} style={{width: 200, height: 200}}/>
+                                </View>
+                                <View style={styles.login}>
+                                    <Text
+                                        style={
+                                            this.state.signIn
+                                                ? [styles.loginHeader,styles.loginHeaderActive]
+                                                : styles.loginHeader
+                                        }
+                                        onPress={() => this.onPressLogin('signIn')}>Se connecter</Text>
+                                    <Text
+                                        style={
+                                            this.state.signUp
+                                                ? [styles.loginHeader,styles.loginHeaderActive]
+                                                : styles.loginHeader
+                                        }
+                                        onPress={() => this.onPressLogin('signUp')}>S'inscrire</Text>
+                                </View>
+                                { content }
+                            </View>
+                        </ScrollView>
+                </SafeAreaView>
+            </KeyboardAvoidingView>
         );
     }
 }
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     wrapper: {
         flex: 1,
         backgroundColor: '#fff',
@@ -77,13 +95,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         margin: 20,
-        marginTop: 50
+        marginTop: 50,
     },
     loginHeader: {
         fontSize: 28,
         color: 'black',
         fontWeight: "300",
         marginBottom: 40,
+        fontFamily: 'Cochin',
     },
     loginHeaderActive: {
         textDecorationLine: 'underline',

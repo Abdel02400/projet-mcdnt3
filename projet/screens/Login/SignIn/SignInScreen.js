@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 import InputField from "../../../components/InputField";
 import ButtonField from "../../../components/ButtonField";
 import { connect } from 'react-redux';
@@ -7,6 +7,9 @@ import { SignInUser } from "../../../actions";
 import { Spinner } from "../../../components/Spinner";
 import * as ImagePicker from 'expo-image-picker';
 import * as Facebook from "expo-facebook";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { testEmail } from '../../../utils/GlobalSettings';
+
 class SignInScreen extends Component {
     constructor(props) {
         super(props);
@@ -14,51 +17,12 @@ class SignInScreen extends Component {
             email: '',
             password: '',
             formNotComplete: false,
-            error: ''
+            error: '',
+            validate: 'Merci de remplir tout les champs'
         };
     }
 
     async _handleFacebookLogin() {
-
-        /*    try {
-                const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-                    '2512803462323237', // Replace with your own app id in standalone app
-                    'L-Ink-React',
-                    { permissions: ['public_profile'] }
-                );
-    
-                switch (type) {
-                    case 'success': {
-                        // Get the user's name using Facebook's Graph API
-                        const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-                        const profile = await response.json();
-                        console.log(
-                            'Logged in!',
-                            `Hi ${profile.name}!`,
-                        );
-                        break;
-                    }
-                    case 'cancel': {
-                        console.log(
-                            'Cancelled!',
-                            'Login was cancelled!',
-                        );
-                        break;
-                    }
-                    default: {
-                        console.log(
-                            'Oops!',
-                            'Login failed!',
-                        );
-                    }
-                }
-            } catch (e) {
-                console.log(
-                    'Oops!',
-                    'Login failed!',
-                );
-            }
-            */
         try {
             const {
                 type,
@@ -98,12 +62,19 @@ class SignInScreen extends Component {
         if (email === '' || password === '') { //a faire (validator de formulaire)
             this.setState({
                 ...this.state,
-                formNotComplete: true
+                formNotComplete: true,
+                validate: 'Merci de remplir tout les champs'
+            });
+        } else if (!testEmail(email)) {
+            this.setState({
+                ...this.state,
+                formNotComplete: true,
+                validate: 'Email au format invalide'
             });
         } else {
             this.props.SignInUser({ email, password });
         }
-    }
+    };
 
     onChangeTextInput = (stateName, value) => {
         this.setState({
@@ -112,7 +83,7 @@ class SignInScreen extends Component {
             error: '',
             [stateName]: value
         });
-    }
+    };
 
     _renderButton() {
         if (this.props.loading) return <Spinner />
@@ -127,84 +98,42 @@ class SignInScreen extends Component {
         )
     }
 
-    /*
-        async takeAndUploadPhotoAsync() {
-            // Display the camera to the user and wait for them to take a photo or to cancel
-            // the action
-            let result = await ImagePicker.launchCameraAsync({
-              allowsEditing: true,
-              aspect: [4, 3],
-            });
-          
-            if (result.cancelled) {
-              return;
-            }
-          
-            // ImagePicker saves the taken photo to disk and returns a local URI to it
-            let localUri = result.uri;
-            let filename = localUri.split('/').pop();
-          
-            // Infer the type of the image
-            let match = /\.(\w+)$/.exec(filename);
-            let type = match ? `image/${match[1]}` : `image`;
-          
-            // Upload the image using the fetch and FormData APIs
-            let formData = new FormData();
-            // Assume "photo" is the name of the form field the server expects
-            formData.append('photo', { uri: localUri, name: filename, type });
-          
-            return await fetch(YOUR_SERVER_URL, {
-              method: 'POST',
-              body: formData,
-              header: {
-                'content-type': 'multipart/form-data',
-              },
-            });
-          }
-    
-          async openLibraryPictures(options) {
-            let result = await ImagePicker.launchImageLibraryAsync({
-                allowsEditing: true,
-                allowsMultipleSelection: true,
-            });
-            if (result.cancelled) {
-                return;
-            }
-            
-            alert("imageUploaded");
-    
-          } */
-
     render() {
         return (
-            <View style={styles.form}>
-                <InputField
-                    labelText="ADRESSE EMAIL"
-                    labelTextSize={14}
-                    labelColor={'black'}
-                    textColor={'black'}
-                    borderBottomColor={'black'}
-                    inputType="email"
-                    customStyle={{ marginBottom: 30 }}
-                    onChangeText={(email) => this.onChangeTextInput('email', email)}
-                />
-                <InputField
-                    labelText="MOT DE PASSE"
-                    labelTextSize={14}
-                    labelColor={'black'}
-                    textColor={'black'}
-                    borderBottomColor={'black'}
-                    inputType="password"
-                    customStyle={{ marginBottom: 30 }}
-                    onChangeText={(password) => this.onChangeTextInput('password', password)}
-                />
-                {this._renderButton()}
-                {this.state.formNotComplete ?
-                    <Text style={styles.formNotComplete}>Merci de remplir tout les champs</Text> : null
-                }
-                <TouchableOpacity onPress={() => this._handleFacebookLogin()}><Text>Go FACEBOOK</Text></TouchableOpacity>
-                <Text>{this.state.error}</Text>
-            </View>
+                <View style={styles.form}>
+                    <InputField
+                        labelText="ADRESSE EMAIL"
+                        labelTextSize={14}
+                        labelColor={'black'}
+                        textColor={'black'}
+                        borderBottomColor={'black'}
+                        inputType="email"
+                        customStyle={{ marginBottom: 30 }}
+                        onChangeText={(email) => this.onChangeTextInput('email', email)}
+                    />
+                    <InputField
+                        labelText="MOT DE PASSE"
+                        labelTextSize={14}
+                        labelColor={'black'}
+                        textColor={'black'}
+                        borderBottomColor={'black'}
+                        inputType="password"
+                        customStyle={{ marginBottom: 30 }}
+                        onChangeText={(password) => this.onChangeTextInput('password', password)}
+                    />
+                    {this.state.formNotComplete ?
+                        <Text style={styles.formNotComplete}>{this.state.validate}</Text> : null
+                    }
+                    <Text style={styles.errorServer}>{this.state.error}</Text>
+                    <View style={{ marginBottom: 20}}>
+                        {this._renderButton()}
+                    </View>
+                    <Icon.Button style={{ height: 50, borderRadius: 30,  justifyContent: 'center'}} name="facebook" backgroundColor="#3b5998" onPress={() => this._handleFacebookLogin()}>
+                        <Text style={{ fontFamily: 'Arial', fontSize: 22, color: 'white', textAlign: 'center' }}>
+                            Login with Facebook
+                        </Text>
+                    </Icon.Button>
+                </View>
         );
     }
 };
@@ -217,7 +146,14 @@ const styles = StyleSheet.create({
     formNotComplete: {
         color: 'red',
         fontSize: 20,
-        marginTop: 2,
+        marginTop: 5,
+        marginBottom: 30
+    },
+    errorServer: {
+        color: 'red',
+        fontSize: 20,
+        marginTop: 5,
+        marginBottom: 30
     }
 });
 

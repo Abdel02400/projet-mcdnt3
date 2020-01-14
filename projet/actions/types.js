@@ -6,6 +6,7 @@ export const SIGNUP_SUCCESS = 'signup_success';
 export const SIGNUP_FAILED = 'signup_failed';
 export const ISLOGGED_SUCCESS = 'islogged_success';
 export const ISLOGGED_FAILED = 'islogged_failed';
+export const ISLOGGED_ATTEMPT = 'islogged_attempt';
 export const INITIALIZEUSER_ATTEMPT = 'initializeuser_attempt';
 export const INITIALIZEUSER_SUCCESS = 'initializeuser_success';
 export const INITIALIZEUSER_FAILED = 'initializeuser_failed';

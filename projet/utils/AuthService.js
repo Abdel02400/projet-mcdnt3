@@ -1,6 +1,6 @@
 import axios from 'axios';
 const headers = {'Content-Type': 'application/json'};
-const burl = "http://192.168.1.16:8000";
+const burl = "http://172.20.10.2:8000";
 import {AsyncStorage} from 'react-native';
 import { Platform } from "react-native";
 
@@ -11,6 +11,7 @@ export default {
         const data = new FormData();
         data.append('token', token);
         data.append('storage', 'addPhoto');
+        data.append('id', id);
         data.append('fileData', {
             uri : Platform.OS === "android" ? avatar.uri : avatar.uri.replace("file://", ""),
             type: Platform.OS === "android" ? 'image/jpeg' : avatar.type,

@@ -61,7 +61,14 @@ module.exports = (app) => {
     })
 
     app.post('/signup', cryptPassword, (req, res) => {
-        var user = new User(req.body.user);
+
+        let userModel = {
+            email: req.body.user.email.toLowerCase(),
+            password: req.body.user.password,
+            role: req.body.user.role
+        };
+
+        let user = new User(userModel);
         User.find({ email: user.email }, function (err, existingEmail) {
             if (!err && existingEmail.length > 0) {
                 res.status(201).send("mail used");
@@ -138,7 +145,7 @@ module.exports = (app) => {
                 let extArray = req.file.mimetype.split("/");
                 let extension = extArray[extArray.length - 1];
 
-                var post = new Post({ url: req.file.filename });
+                var post = new Post({ url: req.file.filename, userID: req.body.id});
 
                 post.save().then(newPost => {
                     User.findOneAndUpdate({ token: token }, { "$push": { "posts": newPost._id } }, { new: true })
@@ -176,23 +183,39 @@ module.exports = (app) => {
     });
 
     app.post('/login', (req, res) => {
-        var { email, password } = req.body.user;
-        User.findOne({ "email": email }, { "__v": 0 }).then(user => {
+        let { email, password } = req.body.user;
+        User.findOne({ "email": email.toLowerCase() }, { "__v": 0 }).then(user => {
             if (user) {
                 bcrypt.compare(password, user.password, (err, comparaison) => {
                     if (comparaison) {
                         generateToken(user.id)
                             .then(token => {
-                                res.status(200).header('x-auth', token).send(user);
+                                var foundPosts = [];
+                                Promise.all(user.posts.map(post => {
+                                    return Post.findOne({_id: post}).exec().catch(err => {
+                                        return null;
+                                    });
+                                })).then(foundPosts => {
+                                    let photos = foundPosts.map(
+                                        function(post) {
+                                            return {url: post.url, id: post._id};
+                                        }
+                                    );
+                                    let newuser = {
+                                        ...user._doc,
+                                        posts: photos
+                                    }
+                                    res.status(200).header('x-auth', token).send(newuser);
+                                }).catch(err => {
+                                });
                             });
-
                     } else {
-                        res.status(201).send('PASSWORD_NOT_MATCH');
+                        res.status(201).send('Mot de passe incorrect !');
                     }
                 })
 
             } else {
-                res.status(201).send('EMAIL_NOT_MATCH');
+                res.status(201).send('Email inconnu ! merci de vous inscrire');
             }
         })
 
@@ -200,3 +223,4 @@ module.exports = (app) => {
     });
 
 };
+

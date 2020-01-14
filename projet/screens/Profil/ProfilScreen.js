@@ -8,7 +8,8 @@ import {
   Text,
   TouchableHighlight,
   Dimensions,
-  TouchableWithoutFeedback, FlatList, Modal, TouchableOpacity, Platform
+  FlatList,
+  Modal, TouchableOpacity
 } from 'react-native';
 import HeaderScreen from '../Header/HeaderScreen';
 import IconMat from "react-native-vector-icons/MaterialCommunityIcons";
@@ -17,7 +18,6 @@ import { connect } from "react-redux";
 import { countElement } from "../../utils/GlobalSettings";
 import { Spinner } from "../../components/Spinner";
 import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
 import { UpdateProfil } from "../../actions";
 import { addPhoto } from "../../actions";
 import ButtonField from "../../components/ButtonField";
@@ -30,6 +30,7 @@ class ProfilScreen extends Component {
       user: null,
       avatar: null,
       profilePictureModalVisible: false,
+      photoModal: false,
       userId: null,
       add: null,
       images: null
@@ -55,7 +56,7 @@ class ProfilScreen extends Component {
       ),
       headerStyle: { height: 40 }
     };
-  };
+  }
 
   componentWillMount() {
     this.props.navigation.setParams({ logout: this._logout });
@@ -72,7 +73,6 @@ class ProfilScreen extends Component {
   }
 
   async componentWillReceiveProps(nextProps, nextContext) {
-
     if (nextProps.isaddPhoto && nextProps.user.posts) await this.setProfilePictureModalNotVisible();
     this.setState({
       ...this.state,
@@ -148,12 +148,11 @@ class ProfilScreen extends Component {
   }
 
   _goToPost(idImage) {
-    // TODO : Chemin vers le post concerné
     alert("Go To image Post number " + idImage);
   }
 
   _renderModal() {
-    if (this.props.loading) {
+    if (this.props.loadingAddPhoto) {
       return <Spinner />
     }
     return (
@@ -162,7 +161,7 @@ class ProfilScreen extends Component {
         flexDirection: 'column',
         justifyContent: 'space-around',
         alignItems: 'center',
-        marginTop: "75%",
+        marginTop: 50
       }}>
         <View style={{
           flex: 1,
@@ -170,7 +169,7 @@ class ProfilScreen extends Component {
           alignItems: 'center',
           marginBottom: 15
         }}>
-          <Ionicons name="md-camera" style={{ fontSize: 50 }}></Ionicons>
+          <Ionicons name="md-camera" style={{ fontSize: 50 }}/>
           <ButtonField
             titleText="Prendre une photo"
             titleTextSize={15}
@@ -184,7 +183,7 @@ class ProfilScreen extends Component {
           flexDirection: 'column',
           alignItems: 'center'
         }}>
-          <Ionicons name="md-image" style={{ fontSize: 50 }}></Ionicons>
+          <Ionicons name="md-image" style={{ fontSize: 50 }} />
           <ButtonField
             titleText="Séléctionner une photo"
             titleTextSize={15}
@@ -193,13 +192,12 @@ class ProfilScreen extends Component {
             onPress={() => this.updateProfileImageFromGallery()}
           />
         </View>
-
       </View>
     )
   }
 
   _renderButton() {
-    if (this.props.loading) return <Spinner />
+    if (this.props.loadingAddPhoto) return <Spinner />
     return (
       <View style={styles.btnAdd}>
         <ButtonField
@@ -222,14 +220,11 @@ class ProfilScreen extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ alignItems: "center", flex: 1 }}>
-            <View style={styles.profileImage}>
-              <TouchableWithoutFeedback onLongPress={() => this.setProfilePictureModalVisible('addPhoto')} style={styles.touchableOpacity}>
-                <Image source={{ uri: this.state.avatar }} style={styles.image} resizeMode="center" />
-              </TouchableWithoutFeedback>
-            </View>
+          <View style={{alignItems: "center", width: "100%" }}>
+            <TouchableOpacity style={styles.avatarPlaceholder} onPress={() => this.setProfilePictureModalVisible('addAvatar')}>
+              <Image source={{ uri: this.state.avatar }} style={styles.avatar} />
+            </TouchableOpacity>
           </View>
           <Modal
             animationType="slide"
@@ -247,7 +242,7 @@ class ProfilScreen extends Component {
 
           <View style={styles.infoContainer}>
             <Text style={[styles.textMiddle, { fontWeight: "200", fontSize: 36 }]}>{this.state.user.firstname} {this.state.user.lastname}</Text>
-            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{this.state.user.role == "tatoue" ? "Tatoué" : "Tatoueur"}</Text>
+            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{this.state.user.role === "tatoué" ? "Tatoué" : "Tatoueur"}</Text>
           </View>
           <View style={styles.descriptionBloc}>
             <Text style={styles.textMiddle}>{this.state.user.description}</Text>
@@ -268,24 +263,30 @@ class ProfilScreen extends Component {
             </View>
           </View>
 
-          <View>
-            {this._renderButton()}
-          </View>
+          {this._renderButton()}
 
           <SafeAreaView style={styles.imageList}>
-            <ScrollView style={styles.container}>
-              <FlatList style={styles.flatListStyle} keyExtractor={(item, index) => index.toString()} data={this.state.images} numColumns={3} renderItem={({ item, index }) => {
-                return (
-                  <View>
-                    <TouchableHighlight focusedOpacity={0} onPress={() => this._goToPost(item.id)}>
-                      <Image style={styles.imageListItem} source={{ uri: "http://192.168.1.16:8000/" + item.url }} />
-                    </TouchableHighlight>
-                  </View>
-                )
+            <ScrollView>
+              {countElement(this.state.images) > 0 &&
+                <FlatList style={styles.flatListStyle} keyExtractor={(item, index) => index.toString()} data={this.state.images} numColumns={3} renderItem={({ item, index }) => {
+                  return (
+                      <View>
+                        <TouchableHighlight focusedOpacity={0} onPress={() => this._goToPost(item.id)}>
+                          <Image style={styles.imageListItem} source={{ uri: "http://172.20.10.2:8000/" + item.url }} />
+                        </TouchableHighlight>
+                      </View>
+                  )
+                }
+                } />
               }
-              } />
+              {countElement(this.state.images) === 0 &&
+                  <View style={styles.noPhotoBloc}>
+                    <Text style={styles.noPhotoText}>Aucune photo ajoutée...</Text>
+                  </View>
+              }
             </ScrollView>
           </SafeAreaView>
+
         </ScrollView>
       </SafeAreaView>
     );
@@ -300,9 +301,11 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderTopWidth: 2,
     borderBottomWidth: 2,
-    marginTop: 10,
-    width: "90%",
-    marginLeft: "5%"
+    margin: 10,
+    height: 50,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   textMiddle: {
     textAlign: 'center',
@@ -311,6 +314,8 @@ const styles = StyleSheet.create({
   imageList: {
     flex: 1,
     marginTop: 10,
+    backgroundColor: 'grey',
+    minHeight: 100,
   },
   imageListItem: {
     width: (Dimensions.get('window').width / 3) - 10,
@@ -349,6 +354,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 100,
+    borderWidth: 2,
     overflow: "hidden"
   },
   dm: {
@@ -473,8 +479,11 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline"
   },
   touchableOpacity: {
-    backgroundColor: "transparent",
-    borderRadius: 0
+    backgroundColor: "black",
+    width: 150,
+    height: 150,
+    justifyContent: "center",
+    alignItems: "center"
   },
   logo: {
     width: 50,
@@ -493,26 +502,37 @@ const styles = StyleSheet.create({
     fontSize: 30
   },
   avatarPlaceholder: {
-    width: 100,
-    height: 100,
+    width: 150,
+    height: 150,
     backgroundColor: "#E1E2E6",
-    borderRadius: 50,
+    borderRadius: 75,
     marginTop: 15,
     marginBottom: 15,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     position: "absolute",
-    width: 100,
-    height: 100,
-    borderRadius: 50
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 3,
+    borderColor: 'black'
   },
   btnAdd: {
-    marginLeft: "7%",
-    marginTop: 20,
-    marginBottom: 10,
-    flex: 1
+    margin: 10,
+    marginTop: 20
+  },
+  noPhotoText: {
+    fontSize: 20,
+    color: 'white',
+    fontFamily: 'Cochin',
+    textAlign: 'center'
+  },
+  noPhotoBloc: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 
