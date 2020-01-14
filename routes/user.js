@@ -222,5 +222,22 @@ module.exports = (app) => {
 
     });
 
+    app.post('/getPhotoData', (req, res) => {
+        let { idPhoto, token } = req.body;
+        User.find({ "token": token }, { "__v": 0 }).then(user => {
+            if (user.length > 0) {
+                Post.findOne({ _id: idPhoto }).then(post => {
+                    res.status(200).send(post)
+                })
+            } else {
+                res.status(201).send("echec token");
+            }
+        }).catch(err => {
+            res.status(401).send("erreur serveur");
+        })
+
+
+    });
+
 };
 

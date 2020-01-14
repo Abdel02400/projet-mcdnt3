@@ -5,3 +5,5 @@ export * from './InitializeUserActions';
 export * from './UpdateProfilActions';
 export * from './AddPhotoActions';
 export * from './GetFeedActions';
+export * from './GetPostActions';
+export * from './addLikesActions';

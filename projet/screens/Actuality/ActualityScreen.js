@@ -328,7 +328,6 @@ class ActualityScreen extends Component {
 
     render() {
         if (this.state.postLoaded) {
-            console.log("SUCCESS : " + Posts);
             return (
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 1 }}>

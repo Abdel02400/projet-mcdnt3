@@ -18,7 +18,13 @@ import {
     ADDPHOTO_SUCCESS,
     GETFEED_ATTEMPT,
     GETFEED_FAILED,
-    GETFEED_SUCCESS, ISLOGGED_ATTEMPT
+    GETFEED_SUCCESS,
+    ISLOGGED_ATTEMPT,
+    GETPOST_ATTEMPT,
+    GETPOST_FAILED,
+    GETPOST_SUCCESS,
+    ADDLIKE_FAILED,
+    ADDLIKE_SUCCESS
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -31,7 +37,8 @@ const INITIAL_STATE = {
     feed: null,
     initializeUser: false,
     isaddPhoto: false,
-    isFeed: false
+    isFeed: false,
+    postModal: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -51,6 +58,7 @@ export default (state = INITIAL_STATE, action) => {
                 isFeed: false
             });
         case INITIALIZEUSER_ATTEMPT:
+        case GETPOST_ATTEMPT:
         case UPDATEPROFIL_ATTEMPT:
             return Object.assign({}, state, {
                 loading: true,
@@ -89,6 +97,11 @@ export default (state = INITIAL_STATE, action) => {
                 error: action.error,
                 isLogged: false,
             });
+        case GETPOST_FAILED:
+            return Object.assign({}, state, {
+                loading: false,
+                error: action.error,
+            });
         case ISLOGGED_SUCCESS:
             return Object.assign({}, state, {
                 loading: false,
@@ -121,6 +134,11 @@ export default (state = INITIAL_STATE, action) => {
         case GETFEED_FAILED:
             return Object.assign({}, state, {
                 isFeed: false
+            });
+        case GETPOST_SUCCESS:
+            return Object.assign({}, state, {
+                postModal: action.post,
+                loading: false,
             });
         case INITIALIZEUSER_SUCCESS:
             return Object.assign({}, state, {

@@ -22,6 +22,7 @@ import { UpdateProfil } from "../../actions";
 import { addPhoto } from "../../actions";
 import ButtonField from "../../components/ButtonField";
 import { Ionicons } from "@expo/vector-icons";
+import Post from "../Post/Post";
 
 class ProfilScreen extends Component {
   constructor(props) {
@@ -33,7 +34,8 @@ class ProfilScreen extends Component {
       photoModal: false,
       userId: null,
       add: null,
-      images: null
+      images: null,
+      idPhotoModal: null
     };
     this._logout = this._logout.bind(this);
   }
@@ -60,6 +62,7 @@ class ProfilScreen extends Component {
 
   componentWillMount() {
     this.props.navigation.setParams({ logout: this._logout });
+    this.props.navigation.setParams({ closeModal: this._closeModal });
     let avatar = "http://172.20.10.2:8000/" + this.props.userId + "-" + this.props.user.avatar;
     this.setState({
       ...this.state,
@@ -70,6 +73,13 @@ class ProfilScreen extends Component {
       images: this.props.user.posts
     });
 
+  }
+
+  _closeModal() {
+    this.setState({
+      ...this.state,
+      photoModal: false
+    })
   }
 
   async componentWillReceiveProps(nextProps, nextContext) {
@@ -148,7 +158,11 @@ class ProfilScreen extends Component {
   }
 
   _goToPost(idImage) {
-    alert("Go To image Post number " + idImage);
+    this.__getPhoto(idImage);
+  }
+
+  __getPhoto(idImage) {
+    this.setState({ ...this.state, photoModal: true, idPhotoModal: idImage });
   }
 
   _renderModal() {
@@ -286,6 +300,27 @@ class ProfilScreen extends Component {
               }
             </ScrollView>
           </SafeAreaView>
+          <Modal
+              animationType="slide"
+              transparent={false}
+              visible={this.state.photoModal}
+              presentationStyle="formSheet"
+              >
+            <View style={{ marginTop: 25, alignItems: 'flex-end'}}>
+              <TouchableOpacity
+                  onPress={() => {
+                    this._closeModal()
+                  }}>
+                <IconMat
+                    name="close"
+                    size={35}
+                />
+              </TouchableOpacity>
+            </View>
+            <ScrollView>
+              <Post id={this.state.idPhotoModal}/>
+            </ScrollView>
+          </Modal>
 
         </ScrollView>
       </SafeAreaView>

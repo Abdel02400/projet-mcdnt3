@@ -5,6 +5,22 @@ import {AsyncStorage} from 'react-native';
 import { Platform } from "react-native";
 
 export default {
+    addLike: async function (id) {
+        let token = await this.getToken();
+        const res = await axios.post(burl + '/addLike',{idPhoto: id, token: token},{
+            headers: headers,
+        });
+
+        return res.status === 200 ? res : false;
+    },
+    getPhotoOnServer: async function (id) {
+        let token = await this.getToken();
+        const res = await axios.post(burl + '/getPhotoData',{idPhoto: id, token: token},{
+            headers: headers,
+        });
+
+        return res.status === 200 ? res : false;
+    },
     addPhoto : async function(avatar, id) {
         let token = await this.getToken();
 

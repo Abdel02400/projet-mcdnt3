@@ -10,6 +10,7 @@ import ProfilScreen from '../screens/Profil/ProfilScreen';
 import ActualityScreen from '../screens/Actuality/ActualityScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
 import ChatScreen from '../screens/Chat/ChatScreen';
+import Post from '../screens/Post/Post';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -24,14 +25,15 @@ const ActualityStack = createStackNavigator(
 );
 
 ActualityStack.navigationOptions = {
-  tabBarLabel: 'Fil d\'actualité',
-  tabBarIcon: ({ focused }) => (
-    <IconFont
-        name="newspaper-o"
-        size={25}
-    />
-  ),
+    tabBarLabel: 'Fil d\'actualité',
+    tabBarIcon: ({ focused }) => (
+        <IconFont
+            name="newspaper-o"
+            size={25}
+        />
+    ),
 };
+
 
 ActualityStack.path = '';
 
@@ -58,7 +60,7 @@ const ProfilStack = createStackNavigator(
   {
     Profil: ProfilScreen,
   },
-  config
+    config
 );
 
 ProfilStack.navigationOptions = {
@@ -98,7 +100,7 @@ const tabNavigator = createBottomTabNavigator({
   SettingsStack,
 },
     {
-        initialRouteName: "ProfilStack"
+        initialRouteName: "ProfilStack",
     });
 
 tabNavigator.path = '';
